@@ -1,0 +1,2567 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>数据采集表单</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+  <!-- Vue 2.x 核心库 -->
+  <script src="https://unpkg.com/vue@2.6.14/dist/vue.js"></script>
+
+  <!-- Element UI 组件库 -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+
+  <!-- Element UI 样式 -->
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- Tailwind配置 -->
+
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#165DFF',
+            secondary: '#36CFC9',
+            accent: '#722ED1',
+            neutral: '#F2F3F5',
+            dark: '#1D2129',
+          },
+          fontFamily: {
+            inter: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+
+  <!-- 自定义工具类 -->
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .card-shadow {
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      }
+      .form-focus {
+        @apply focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none;
+      }
+    }
+  </style>
+</head>
+<body class="bg-gray-50 font-inter text-dark">
+  <!-- 页面加载动画 -->
+  <div id="loader" class="fixed inset-0 bg-white z-50 flex items-center justify-center transition-opacity duration-500">
+    <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-primary border-opacity-75"></div>
+  </div>
+
+  <div class="min-h-screen flex flex-col opacity-0 transition-opacity duration-500" id="content">
+    <!-- 顶部导航 -->
+    <header class="bg-white sticky top-0 z-40 shadow-sm transition-all duration-300" id="navbar">
+      <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+        <div class="flex items-center space-x-2">
+          <i class="fa-solid fa-clipboard-list text-primary text-2xl"></i>
+          <h1 class="text-xl font-bold text-dark hidden sm:block">数据采集系统</h1>
+        </div>
+        <div class="flex items-center space-x-4">
+          <button id="saveDraftBtn" class="text-primary hover:text-primary/80 transition-colors duration-200 flex items-center">
+            <i class="fa-solid fa-save mr-1"></i>
+            <span class="hidden sm:inline">保存草稿</span>
+          </button>
+          <button id="submitBtn" class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg transition-all duration-200 flex items-center">
+            <span class="hidden sm:inline mr-1">提交</span>
+            <i class="fa-solid fa-paper-plane"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="flex-grow container mx-auto px-4 py-6">
+      <!-- 标题区域 -->
+      <section class="mb-8 text-center">
+        <h2 class="text-[clamp(1.8rem,4vw,2.5rem)] font-bold text-dark mb-3">个人数据采集表</h2>
+        <p class="text-gray-600 max-w-3xl mx-auto">请填写以下信息，所有带 <span class="text-red-500">*</span> 的字段为必填项</p>
+      </section>
+
+      <!-- 图片区域 - 固定本地图片 -->
+      <section class="mb-8 relative h-[250px] md:h-[350px] overflow-hidden rounded-xl shadow-lg">
+        <img src="images/my-photo.jpg" alt="个人数据采集表宣传图" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
+          <div class="p-6 text-white">
+            <h3 class="text-xl font-bold mb-1">宣传图片</h3>
+            <p class="text-sm text-gray-200">此为固定显示的图片</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 表单内容区域 - 所有字段上下排列 -->
+      <div class="grid grid-cols-1 gap-8">
+
+      <!-- 基本信息 -->
+      <section class="bg-white rounded-xl p-6 card-shadow animate-fade-in">
+        <div class="flex items-center mb-6">
+          <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary mr-3">
+            <i class="fa-solid fa-user"></i>
+          </div>
+          <h3 class="text-xl font-bold">基本信息</h3>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- 姓名 -->
+          <div class="form-focus">
+            <label for="name" class="block text-sm font-medium text-dark mb-2">
+              <span class="text-red-500">*</span>姓名
+            </label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-dark">
+                <i class="fa fa-signature"></i>
+              </span>
+              <input type="text" id="name" name="name" required
+                class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 input-focus transition-all duration-300 outline-none"
+                placeholder="请输入姓名">
+            </div>
+          </div>
+
+          <!-- 身份证号码 -->
+          <div class="form-focus">
+            <label for="idNumber" class="block text-sm font-medium text-dark mb-2">
+              <span class="text-red-500">*</span>身份证号码
+            </label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-dark">
+                <i class="fa fa-id-card"></i>
+              </span>
+              <input type="text" id="idNumber" name="idCard" maxlength="18" required
+                class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 input-focus transition-all duration-300 outline-none"
+                placeholder="请输入18位身份证号码">
+            </div>
+            <div id="idNumberInfo" class="mt-2 text-sm text-neutral-dark hidden">
+              <span id="genderInfo"></span> | <span id="ageInfo"></span>
+            </div>
+          </div>
+
+          <!-- 性别（自动计算） -->
+          <div class="form-focus">
+            <label for="gender" class="block text-sm font-medium text-dark mb-2">
+              性别
+            </label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-dark">
+                <i class="fa fa-venus-mars"></i>
+              </span>
+              <div class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 bg-gray-50">
+                <span id="genderDisplay" class="text-neutral-medium">未填写身份证号码</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 年龄（自动计算） -->
+          <div class="form-focus">
+            <label for="age" class="block text-sm font-medium text-dark mb-2">
+              年龄
+            </label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-dark">
+                <i class="fa fa-calendar"></i>
+              </span>
+              <div class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 bg-gray-50">
+                <span id="ageDisplay" class="text-neutral-medium">未填写身份证号码</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 手机号码 -->
+          <div class="form-focus">
+            <label for="phone" class="block text-sm font-medium text-dark mb-2">
+              <span class="text-red-500">*</span>手机号码
+            </label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-dark">
+                <i class="fa fa-phone"></i>
+              </span>
+              <input type="tel" id="phone" name="phone" required
+                class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 input-focus transition-all duration-300 outline-none"
+                placeholder="请输入手机号码">
+            </div>
+          </div>
+
+          <!-- 户口性质 -->
+          <div class="form-focus">
+            <label for="householdType" class="block text-sm font-medium text-dark mb-2">
+              <span class="text-red-500">*</span>户口性质
+            </label>
+            <div class="relative select-wrapper">
+              <select id="householdType" name="householdType" required
+                class="w-full pl-10 pr-10 py-3 rounded-lg border border-gray-300 input-focus transition-all duration-300 outline-none appearance-none bg-white">
+                <option value="" disabled selected>请选择户口性质</option>
+                <option value="agricultural">农业户口</option>
+                <option value="non_agricultural">非农业户口</option>
+              </select>
+              <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-dark">
+                <i class="fa fa-briefcase"></i>
+              </span>
+            </div>
+          </div>
+
+          <!-- 户籍地址 -->
+          <div class="form-focus">
+            <label for="registeredAddress" class="block text-sm font-medium text-dark mb-2">
+              <span class="text-red-500">*</span>户籍地址
+            </label>
+            <div class="relative">
+              <div id="address-selector" class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 hover:border-primary/70 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 transition-all duration-300 cursor-pointer flex items-center justify-between">
+                <span id="selected-address" class="text-neutral-medium">请选择户籍地址</span>
+                <i id="selector-arrow" class="fa fa-chevron-down text-neutral-dark transition-transform duration-200"></i>
+              </div>
+              <div id="address-dropdown" class="absolute left-0 right-0 mt-1 bg-white rounded-lg shadow-lg border border-gray-200 z-10 hidden max-h-60 overflow-y-auto">
+                <div id="dropdown-content" class="p-1"></div>
+              </div>
+              <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-dark">
+                <i class="fa fa-home"></i>
+              </span>
+            </div>
+            <!-- 隐藏的输入框，用于表单提交 -->
+            <input type="hidden" id="registeredAddress" name="registeredAddress" required>
+          </div>
+
+          <!-- 现常住地址 -->
+          <div class="form-focus" data-shared-address-selector data-selector-id="residential">
+            <label for="residential" class="block text-sm font-medium text-dark mb-2">
+              <span class="text-red-500">*</span>现常住地址
+            </label>
+            <div class="relative">
+              <div id="residential-selector" class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 hover:border-primary/70 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 transition-all duration-300 cursor-pointer flex items-center justify-between">
+                <span id="residential-selected" class="text-neutral-medium">请选择省/市/区/街道/社区</span>
+                <i id="residential-arrow" class="fa fa-chevron-down text-neutral-dark transition-transform duration-200"></i>
+              </div>
+              <div id="residential-dropdown" class="absolute left-0 right-0 mt-1 bg-white rounded-lg shadow-lg border border-gray-200 z-20 hidden max-h-[280px] overflow-y-auto">
+                <div id="residential-content" class="p-1.5"></div>
+              </div>
+              <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-dark">
+                <i class="fa fa-home"></i>
+              </span>
+            </div>
+            <!-- 隐藏的输入框，用于表单提交 -->
+            <input type="hidden" id="residential" name="residential" required>
+          </div>
+
+          <!-- 最高学历 -->
+          <div class="form-focus">
+            <label for="education" class="block text-sm font-medium text-dark mb-2">
+              <span class="text-red-500">*</span>文化程度
+            </label>
+            <div class="relative select-wrapper">
+              <select id="education" name="education" required
+                class="w-full pl-10 pr-10 py-3 rounded-lg border border-gray-300 input-focus transition-all duration-300 outline-none appearance-none bg-white">
+                <option value="" disabled selected>请选择学历</option>
+                <option value="junior_high_or_below">初中及以下</option>
+                <option value="high_school">高中（中专、技校）</option>
+                <option value="college">大专</option>
+                <option value="bachelor">本科</option>
+                <option value="master_or_above">硕士及以上</option>
+              </select>
+              <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-dark">
+                <i class="fa fa-graduation-cap"></i>
+              </span>
+            </div>
+          </div>
+
+          <!-- 专业字段 - 根据学历动态显示/隐藏 -->
+          <div id="majorRow" class="form-focus hidden">
+            <label for="major" class="block text-sm font-medium text-dark mb-2">
+              <span style="color: red;">*</span>专业名称
+            </label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-dark">
+                <i class="fa fa-book"></i>
+              </span>
+              <input type="text" id="major" name="major"
+                class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 input-focus transition-all duration-300 outline-none"
+                placeholder="请输入专业名称">
+            </div>
+          </div>
+
+          <!-- 是否有技能 - 控制技能名称显示/隐藏 -->
+          <div class="form-focus">
+            <label class="block text-sm font-medium text-dark mb-2">
+              <span class="text-red-500">*</span>是否有专业及职业技术等级
+            </label>
+            <div class="flex space-x-4 pt-2">
+              <label class="inline-flex items-center cursor-pointer">
+                <input type="radio" name="hasSkill" value="yes" class="w-4 h-4 text-primary focus:ring-primary">
+                <span class="ml-2">有</span>
+              </label>
+              <label class="inline-flex items-center cursor-pointer">
+                <input type="radio" name="hasSkill" value="no" class="w-4 h-4 text-primary focus:ring-primary">
+                <span class="ml-2">无</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- 专业字段 - 是否有专业及职业技术等级动态显示/隐藏 -->
+          <div id="skillNameRow" class="form-focus hidden">
+            <label for="skillName" class="block text-sm font-medium text-dark mb-2">
+              <span style="color: red;">*</span>专业及职业技术名称
+            </label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-dark">
+                <i class="fa fa-certificate"></i>
+              </span>
+              <input type="text" id="skillName" name="skillName"
+                class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 input-focus transition-all duration-300 outline-none"
+                placeholder="请输入专业及职业技术名称">
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+        <!-- 就业信息 -->
+        <section class="bg-white rounded-xl p-6 card-shadow mb-6" data-section="employment">
+          <div class="flex items-center mb-4">
+            <div class="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center text-secondary mr-3">
+              <i class="fa-solid fa-briefcase"></i>
+            </div>
+            <h3 class="text-xl font-bold">就业信息</h3>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            <!-- 劳动能力 -->
+            <div class="form-focus">
+              <label for="laborAbility" class="block text-sm font-medium text-gray-700 mb-1">
+                <span class="text-red-500">*</span>劳动能力
+              </label>
+              <div class="relative">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-dark">
+                  <i class="fa fa-briefcase"></i>
+                </span>
+                <select id="laborAbility" name="laborAbility" required
+                  class="w-full pl-10 pr-10 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all duration-300 outline-none appearance-none bg-white">
+                  <option value="" disabled selected>请选择劳动能力</option>
+                  <option value="skilled">技能劳动力</option>
+                  <option value="ordinary">普通劳动力</option>
+                  <option value="weak">弱劳动力或半劳动力</option>
+                  <option value="lost">丧失劳动力</option>
+                  <option value="none">无劳动力</option>
+                </select>
+                <span class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-neutral-dark">
+                  <i class="fa fa-chevron-down"></i>
+                </span>
+              </div>
+            </div>
+
+            <!-- 就业状态 -->
+            <div class="form-focus">
+              <label class="form-label">
+                <span  class="text-red-500">*</span>就业状态
+              </label>
+              <div class="flex space-x-4 pt-2">
+                <label class="inline-flex items-center cursor-pointer">
+                  <input type="radio" name="employmentStatus" value="employed" class="w-4 h-4 text-primary focus:ring-primary">
+                  <span class="ml-2">已就业</span>
+                </label>
+                <label class="inline-flex items-center cursor-pointer">
+                  <input type="radio" name="employmentStatus" value="unemployed" class="w-4 h-4 text-primary focus:ring-primary">
+                  <span class="ml-2">未就业</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- 就业地点 -->
+            <div id="employmentLocationField" class="form-focus">
+              <label for="employmentLocation" class="block text-sm font-medium text-gray-700 mb-1">
+                <span class="text-red-500">*</span>就业地点
+              </label>
+              <div class="relative">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-dark">
+                  <i class="fa fa-map-marker"></i>
+                </span>
+                <select id="employmentLocation" name="employmentLocation" required
+                  class="w-full pl-10 pr-10 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all duration-300 outline-none appearance-none bg-white">
+                  <option value="" disabled selected>请选择就业地点</option>
+                  <option value="county">县内就业</option>
+                  <option value="city_outside_county">县外市内就业</option>
+                  <option value="province_outside_city">市外省内就业</option>
+                  <option value="outside_province">省外就业</option>
+                  <option value="abroad">国外就业</option>
+                </select>
+                <span class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-neutral-dark">
+                  <i class="fa fa-chevron-down"></i>
+                </span>
+              </div>
+            </div>
+
+            <!-- 回乡就业创业意愿 -->
+            <!-- 回乡就业创业意愿 - 就业地点--市外省内就业 省外就业 国外就业 动态显示/隐藏 -->
+            <div id="returnIntentionField" class="form-focus">
+              <label class="block text-sm font-medium text-gray-700 mb-1">
+                <span class="text-red-500">*</span>是否有回乡就业创业意愿
+              </label>
+              <div class="flex space-x-4 pt-2">
+                <label class="inline-flex items-center">
+                  <input type="radio" name="returnIntention" value="yes" class="w-4 h-4 text-primary focus:ring-primary">
+                  <span class="ml-2">有</span>
+                </label>
+                <label class="inline-flex items-center">
+                  <input type="radio" name="returnIntention" value="no" class="w-4 h-4 text-primary focus:ring-primary">
+                  <span class="ml-2">无</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- 回县就业意向从事行业 -->
+              <!-- 回县就业意向从事行业 - 是否回乡就业创业意愿动态显示/隐藏 -->
+            <div id="industryIntentionField" class="form-focus">
+              <label for="industryIntention" class="block text-sm font-medium text-gray-700 mb-1">
+                <span class="text-red-500">*</span>回县就业意向从事行业
+              </label>
+              <div class="relative">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-dark">
+                  <i class="fa fa-cogs"></i>
+                </span>
+                <select id="industryIntention" name="industryIntention" required
+                  class="w-full pl-10 pr-10 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all duration-300 outline-none appearance-none bg-white">
+                  <option value="" disabled selected>请选择行业</option>
+                  <option value="agriculture">农业</option>
+                  <option value="manufacturing">制造业</option>
+                  <option value="construction">建筑业</option>
+                  <option value="wholesale">批发和零售业</option>
+                  <option value="transportation">交通运输业</option>
+                  <option value="food">住宿和餐饮业</option>
+                  <option value="information">信息传输业</option>
+                  <option value="finance">金融业</option>
+                  <option value="real_estate">房地产业</option>
+                  <option value="education">教育</option>
+                  <option value="health">卫生和社会工作</option>
+                  <option value="other">其他行业</option>
+                </select>
+                <span class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-neutral-dark">
+                  <i class="fa fa-chevron-down"></i>
+                </span>
+              </div>
+            </div>
+
+            <!-- 回县就业意向岗位类型 -->
+              <!-- 回县就业意向从事行业 - 是否回乡就业创业意愿动态显示/隐藏 -->
+            <div id="jobTypeIntentionField" class="form-focus">
+              <label for="jobTypeIntention" class="block text-sm font-medium text-gray-700 mb-1">
+                <span class="text-red-500">*</span>回县就业意向岗位类型
+              </label>
+              <div class="relative">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-dark">
+                  <i class="fa fa-wrench"></i>
+                </span>
+                <select id="jobTypeIntention" name="jobTypeIntention" required
+                  class="w-full pl-10 pr-10 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all duration-300 outline-none appearance-none bg-white">
+                  <option value="" disabled selected>请选择岗位类型</option>
+                  <option value="management">管理岗位</option>
+                  <option value="technical">技术岗位</option>
+                  <option value="sales">销售岗位</option>
+                  <option value="service">服务岗位</option>
+                  <option value="production">生产岗位</option>
+                  <option value="logistics">物流岗位</option>
+                  <option value="administration">行政岗位</option>
+                  <option value="finance">财务岗位</option>
+                  <option value="hr">人力资源</option>
+                  <option value="other">其他岗位</option>
+                </select>
+                <span class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-neutral-dark">
+                  <i class="fa fa-chevron-down"></i>
+                </span>
+              </div>
+            </div>
+
+            <!-- 是否同常住地址 -->
+            <div id="sameAddressField" class="form-focus">
+              <label class="block text-sm font-medium text-gray-700 mb-1">
+                <span class="text-red-500">*</span>就业地址：是否同常住地址
+              </label>
+              <div class="flex space-x-4 pt-2">
+                <label class="inline-flex items-center">
+                  <input type="radio" name="sameAddress" value="yes" class="w-4 h-4 text-primary focus:ring-primary">
+                  <span class="ml-2">是</span>
+                </label>
+                <label class="inline-flex items-center">
+                  <input type="radio" name="sameAddress" value="no" class="w-4 h-4 text-primary focus:ring-primary">
+                  <span class="ml-2">否</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- 修改后的现就业地址文本输入 -->
+            <div id="currentAddressContainer" class="form-focus">
+              <label for="currentAddress" class="block text-sm font-medium text-dark mb-2">
+                  <span class="text-red-500">*</span>现就业地址
+              </label>
+              <div class="relative">
+                  <input
+                      type="text"
+                      id="currentAddress"
+                      name="currentAddress"
+                      required
+                      placeholder="请输入省/市/区/街道/社区地址"
+                      class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 hover:border-primary/70 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300"
+                  >
+                  <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-dark">
+                      <i class="fa fa-map-marker"></i>
+                  </span>
+              </div>
+              <div class="text-sm text-gray-500 mt-1">示例：浙江省杭州市余杭区五常街道阿里巴巴园区</div>
+                  <!-- 添加同步提示 -->
+              <div class="text-sm text-gray-500 mt-1" id="addressSyncTip">
+                若是否同常住地址选择“是”，此处将自动填充常住地址
+              </div>
+            </div>
+
+
+              <!-- 就业形式 -->
+              <div id="employmentTypeField" class="form-focus">
+                <label for="employmentType" class="block text-sm font-medium text-gray-700 mb-1">
+                  <span class="text-red-500">*</span>就业形式
+                </label>
+                <div class="relative">
+                  <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-dark">
+                    <i class="fa fa-briefcase"></i>
+                  </span>
+                  <select id="employmentType" name="employmentType" required
+                    class="w-full pl-10 pr-10 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all duration-300 outline-none appearance-none bg-white">
+                    <option value="" disabled selected>请选择就业形式</option>
+                    <option value="post_employment">岗位就业</option>
+                    <option value="self_employment">自主创业</option>
+                    <option value="flexible_employment">灵活就业</option>
+                  </select>
+                  <span class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-neutral-dark">
+                    <i class="fa fa-chevron-down"></i>
+                  </span>
+                </div>
+              </div>
+
+              <!-- 从事行业 -->
+              <div id="industryField" class="form-focus hidden">
+                <label for="industry" class="block text-sm font-medium text-gray-700 mb-1">
+                  <span class="text-red-500">*</span>从事行业
+                </label>
+                <div class="relative">
+                  <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-dark">
+                    <i class="fa fa-cogs"></i>
+                  </span>
+                  <select id="industry" name="industry" required
+                    class="w-full pl-10 pr-10 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all duration-300 outline-none appearance-none bg-white">
+                    <option value="" disabled selected>请选择行业类型</option>
+                    <option value="manufacturing">制造业</option>
+                    <option value="construction">建筑业</option>
+                    <option value="wholesale_retail">批发零售</option>
+                    <option value="accommodation_catering">住宿餐饮</option>
+                    <option value="transportation">交通运输</option>
+                    <option value="household_service">家政服务</option>
+                    <option value="other">其它</option>
+                  </select>
+                  <span class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-neutral-dark">
+                    <i class="fa fa-chevron-down"></i>
+                  </span>
+                </div>
+              </div>
+
+              <!-- 从事工种 -->
+              <div id="occupationField" class="form-focus hidden">
+                <label for="occupation" class="block text-sm font-medium text-gray-700 mb-1">
+                  <span class="text-red-500">*</span>从事工种
+                </label>
+                <div class="relative">
+                  <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-dark">
+                    <i class="fa fa-wrench"></i>
+                  </span>
+                  <select id="occupation" name="occupation" required
+                    class="w-full pl-10 pr-10 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all duration-300 outline-none appearance-none bg-white">
+                    <option value="" disabled selected>请选择从事工种</option>
+                    <option value="general_worker">普工</option>
+                    <option value="skilled_worker">技工（含打零工）</option>
+                    <option value="professional_technician">专业技术人员</option>
+                    <option value="administrative_staff">行政管理人员</option>
+                    <option value="self_employed">个体经营人员</option>
+                    <option value="other">其它</option>
+                  </select>
+                  <span class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-neutral-dark">
+                    <i class="fa fa-chevron-down"></i>
+                  </span>
+                </div>
+              </div>
+
+              <!-- 创业类型 -->
+              <div id="businessTypeField" class="form-focus hidden">
+                <label for="businessType" class="block text-sm font-medium text-gray-700 mb-1">
+                  <span class="text-red-500">*</span>创业类型
+                </label>
+                <div class="relative">
+                  <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-dark">
+                    <i class="fa fa-lightbulb"></i>
+                  </span>
+                  <select id="businessType" name="businessType" required
+                    class="w-full pl-10 pr-10 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all duration-300 outline-none appearance-none bg-white">
+                    <option value="" disabled selected>请选择创业类型</option>
+                    <option value="corporate">公司型</option>
+                    <option value="individual_business">个体工商户</option>
+                    <option value="home_based">居家型</option>
+                    <option value="franchise">加盟型</option>
+                    <option value="online_store">网络店铺型</option>
+                    <option value="other">其它</option>
+                  </select>
+                  <span class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-neutral-dark">
+                    <i class="fa fa-chevron-down"></i>
+                  </span>
+                </div>
+              </div>
+
+              <!-- 自由职业 -->
+              <div id="freelanceField" class="form-focus hidden">
+                <label for="freelance" class="block text-sm font-medium text-gray-700 mb-1">
+                  <span class="text-red-500">*</span>自由职业
+                </label>
+                <div class="relative">
+                  <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-dark">
+                    <i class="fa fa-user"></i>
+                  </span>
+                  <select id="freelance" name="freelance" required
+                    class="w-full pl-10 pr-10 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all duration-300 outline-none appearance-none bg-white">
+                    <option value="" disabled selected>请选择自由职业类型</option>
+                    <option value="temporary_worker">临时工</option>
+                    <option value="ride_hailing_driver">网约车司机</option>
+                    <option value="food_delivery_rider">外卖骑手</option>
+                    <option value="web_anchor">网络主播</option>
+                    <option value="construction_day_laborer">工地小工</option>
+                    <option value="other">其它</option>
+                  </select>
+                  <span class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-neutral-dark">
+                    <i class="fa fa-chevron-down"></i>
+                  </span>
+                </div>
+              </div>
+
+            <!-- 未就业原因 -->
+            <div id="unemploymentReasonContainer" class="form-focus">
+              <label for="unemploymentReason" class="block text-sm font-medium text-gray-700 mb-1">
+                <span class="text-red-500">*</span>未就业原因
+              </label>
+              <div class="relative">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-dark">
+                  <i class="fa fa-question-circle"></i>
+                </span>
+                <select id="unemploymentReason" name="unemploymentReason" required
+                  class="w-full pl-10 pr-10 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all duration-300 outline-none appearance-none bg-white">
+                  <option value="" disabled selected>请选择未就业原因</option>
+                  <option value="farming">在家务农</option>
+                  <option value="student">在校学生</option>
+                  <option value="unemployed">失业</option>
+                  <option value="military_service">服兵役</option>
+                  <option value="imprisoned">监狱服刑</option>
+                  <option value="disabled">残疾、生病等丧失劳动能力</option>
+                  <option value="other">其它</option>
+                </select>
+                <span class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-neutral-dark">
+                  <i class="fa fa-chevron-down"></i>
+                </span>
+              </div>
+            </div>
+
+            <!-- 是否有就业意愿 -->
+            <div id="employmentDesireContainer" class="form-focus">
+              <label class="block text-sm font-medium text-gray-700 mb-1">
+                <span class="text-red-500">*</span>是否有就业意愿
+              </label>
+              <div class="flex space-x-4 pt-2">
+                <label class="inline-flex items-center">
+                  <input type="radio" name="employmentDesire" value="yes" class="w-4 h-4 text-primary focus:ring-primary">
+                  <span class="ml-2">有</span>
+                </label>
+                <label class="inline-flex items-center">
+                  <input type="radio" name="employmentDesire" value="no" class="w-4 h-4 text-primary focus:ring-primary">
+                  <span class="ml-2">无</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- 期望从事行业/岗位 -->
+            <div id="expectedIndustryField" class="form-focus hidden">
+              <label for="expectedIndustry" class="block text-sm font-medium text-gray-700 mb-1">
+                <span class="text-red-500">*</span>期望从事行业/岗位
+              </label>
+              <div class="relative select-wrapper">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-dark">
+                  <i class="fa fa-cogs"></i>
+                </span>
+                <select id="expectedIndustry" name="expectedIndustry" required
+                  class="w-full pl-10 pr-10 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all duration-300 outline-none appearance-none bg-white">
+                  <option value="" disabled selected>请选择期望行业/岗位</option>
+                  <option value="manufacturing">制造业</option>
+                  <option value="construction">建筑业</option>
+                  <option value="wholesale_retail">批发零售</option>
+                  <option value="accommodation_catering">住宿餐饮</option>
+                  <option value="transportation">交通运输</option>
+                  <option value="household_service">家政服务</option>
+                  <option value="other">其它</option>
+                </select>
+                <span class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-neutral-dark">
+                  <i class="fa fa-chevron-down"></i>
+                </span>
+              </div>
+            </div>
+
+            <!-- 期望月收入 -->
+            <div id="expectedSalaryField" class="form-focus hidden">
+              <label for="expectedSalary" class="block text-sm font-medium text-gray-700 mb-1">
+                <span class="text-red-500">*</span>期望月收入
+              </label>
+              <div class="relative">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-dark">
+                  <i class="fa fa-money-bill-wave"></i>
+                </span>
+                <select id="expectedSalary" name="expectedSalary" required
+                  class="w-full pl-10 pr-10 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all duration-300 outline-none appearance-none bg-white">
+                  <option value="" disabled selected>请选择期望月收入范围</option>
+                  <option value="1000-3000">1000 元 - 3000 元</option>
+                  <option value="3000-5000">3000 元 - 5000 元</option>
+                  <option value="5000-8000">5000 元 - 8000 元</option>
+                  <option value="8000+">8000 元以上</option>
+                </select>
+              </div>
+            </div>
+
+
+        <!-- 是否有培训意愿 -->
+        <div class="form-focus">
+          <label class="block text-sm font-medium text-gray-700 mb-1">
+            <span class="text-red-500">*</span>是否有培训意愿
+          </label>
+          <div class="flex space-x-4 pt-2">
+            <label class="inline-flex items-center">
+              <input type="radio" name="trainingDesire" value="yes" class="w-4 h-4 text-primary focus:ring-primary">
+              <span class="ml-2">有</span>
+            </label>
+            <label class="inline-flex items-center">
+              <input type="radio" name="trainingDesire" value="no" class="w-4 h-4 text-primary focus:ring-primary">
+              <span class="ml-2">无</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- 培训意向行业 -->
+        <div id="trainingIntentionField" class="form-focus hidden">
+          <label for="trainingIntention" class="block text-sm font-medium text-gray-700 mb-1">
+            <span class="text-red-500">*</span>培训意向行业
+          </label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-dark">
+              <i class="fa fa-cogs"></i>
+            </span>
+            <select id="trainingIntention" name="trainingIntention" required
+              class="w-full pl-10 pr-10 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all duration-300 outline-none appearance-none bg-white">
+              <option value="" disabled selected>请选择培训行业</option>
+              <option value="agriculture">农业技术</option>
+              <option value="manufacturing">制造业技术</option>
+              <option value="electronics">电子电器维修</option>
+              <option value="construction">建筑技能</option>
+              <option value="it">信息技术</option>
+              <option value="business">商业管理</option>
+              <option value="beauty">美容美发</option>
+              <option value="cooking">餐饮服务</option>
+              <option value="logistics">物流管理</option>
+              <option value="healthcare">健康护理</option>
+              <option value="other">其他行业</option>
+            </select>
+            <span class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-neutral-dark">
+              <i class="fa fa-chevron-down"></i>
+            </span>
+          </div>
+        </div>
+
+
+            <!-- 是否有创业意愿 -->
+            <div class="form-focus">
+              <label class="block text-sm font-medium text-gray-700 mb-1">
+                <span class="text-red-500">*</span>是否有创业意愿
+              </label>
+              <div class="flex space-x-4 pt-2">
+                <label class="inline-flex items-center">
+                  <input type="radio" name="businessDesire" value="yes" class="w-4 h-4 text-primary focus:ring-primary">
+                  <span class="ml-2">有</span>
+                </label>
+                <label class="inline-flex items-center">
+                  <input type="radio" name="businessDesire" value="no" class="w-4 h-4 text-primary focus:ring-primary">
+                  <span class="ml-2">无</span>
+                </label>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+    <section class="bg-white rounded-xl p-6 shadow-md mb-6">
+        <div class="flex items-center mb-4">
+            <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-500 mr-3">
+                <i class="fa-solid fa-home"></i>
+            </div>
+            <h3 class="text-xl font-bold">家庭信息</h3>
+        </div>
+
+        <div class="space-y-6">
+            <div class="form-focus">
+                <label for="householdName" class="block text-sm font-medium text-gray-700 mb-1"> <span class="text-red-500">*</span>户主姓名</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-dark">
+                        <i class="fa fa-user"></i>
+                    </span>
+                    <input type="text" id="householdName" class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all duration-300 outline-none" placeholder="请输入户主姓名" required>
+                </div>
+            </div>
+
+            <div class="form-focus">
+                <label for="relationship" class="block text-sm font-medium text-gray-700 mb-1"> <span class="text-red-500">*</span>与户主关系</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-dark">
+                        <i class="fa fa-users"></i>
+                    </span>
+                    <select id="relationship" name="relationship" class="w-full pl-10 pr-10 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all duration-300 outline-none appearance-none bg-white" required>
+                        <option value="" disabled selected>请选择与户主关系</option>
+                        <option value="householder">户主本人</option>
+                        <option value="spouse">配偶</option>
+                        <option value="child">子女</option>
+                        <option value="parent">父母</option>
+                        <option value="sibling">兄弟姐妹</option>
+                        <option value="grandparent">祖父母/外祖父母</option>
+                        <option value="grandchild">孙子女/外孙子女</option>
+                        <option value="daughter_in_law">儿媳/女婿</option>
+                        <option value="parents_in_law">公婆/岳父母</option>
+                        <option value="uncle_aunt">叔伯/姑舅/姨</option>
+                        <option value="non_relative">非亲属</option>
+                        <option value="other">其它</option>
+                    </select>
+                    <span class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-neutral-dark">
+                        <i class="fa fa-chevron-down"></i>
+                    </span>
+                </div>
+            </div>
+
+
+            <div class="form-focus" id="householdIdContainer">
+                <label for="householdId" class="block text-sm font-medium text-gray-700 mb-1"> <span id="householdIdRequired" class="text-red-500">*</span>户主身份证号码</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-dark">
+                        <i class="fa fa-id-card"></i>
+                    </span>
+                    <input type="text" id="householdId" pattern="^\d{17}[\dXx]$" class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all duration-300 outline-none readonly-field" placeholder="请输入户主身份证号码" readonly>
+                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 text-green-500">
+                        <i class="fa fa-check-circle"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-focus" id="householdMembersContainer">
+                <label for="householdMembers" class="block text-sm font-medium text-gray-700 mb-1"> <span class="text-red-500">*</span>户内人数</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-dark">
+                        <i class="fa fa-users"></i>
+                    </span>
+                    <input type="number" id="householdMembers" min="1" class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all duration-300 outline-none" placeholder="请输入户内人数" required>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 收支信息 -->
+    <section class="bg-white rounded-xl p-6 shadow-md" data-section="income">
+        <div class="flex items-center mb-4">
+            <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-500 mr-3">
+                <i class="fa-solid fa-money-bill"></i>
+            </div>
+            <h3 class="text-xl font-bold">收支信息</h3>
+        </div>
+
+        <div class="space-y-6">
+            <div class="form-focus">
+                <label for="salaryIncome" class="block text-sm font-medium text-gray-700 mb-1"><span style="color: red;">*</span>工资性收入（元/月）</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-dark">
+                        <i class="fa fa-money-bill-wave"></i>
+                    </span>
+                    <input type="number" id="salaryIncome" min="0" class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all duration-300 outline-none" placeholder="请输入工资性收入">
+                </div>
+            </div>
+
+            <div class="form-focus">
+                <label for="businessIncome" class="block text-sm font-medium text-gray-700 mb-1"><span style="color: red;">*</span>种养经商等收入（元/月）</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-dark">
+                        <i class="fa fa-money-bill-wave"></i>
+                    </span>
+                    <input type="number" id="businessIncome" min="0" class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all duration-300 outline-none" placeholder="请输入种养经商等收入">
+                </div>
+            </div>
+
+            <div class="form-focus">
+                <label for="otherIncome" class="block text-sm font-medium text-gray-700 mb-1"><span style="color: red;">*</span>其它收入（元/月）</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-dark">
+                        <i class="fa fa-money-bill-wave"></i>
+                    </span>
+                    <input type="number" id="otherIncome" min="0" class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all duration-300 outline-none" placeholder="请输入其它收入">
+                </div>
+            </div>
+
+            <div class="form-focus" id="dailyExpenseContainer">
+                <label for="dailyExpense" class="block text-sm font-medium text-gray-700 mb-1"><span style="color: red;">*</span>日常生活支出（元/月）</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-dark">
+                        <i class="fa fa-shopping-basket"></i>
+                    </span>
+                    <input type="number" id="dailyExpense" min="0" class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all duration-300 outline-none" placeholder="请输入日常生活支出">
+                </div>
+            </div>
+
+            <div class="form-focus" id="medicalEducationExpenseContainer">
+                <label for="medicalEducationExpense" class="block text-sm font-medium text-gray-700 mb-1"><span style="color: red;">*</span>医疗教育支出（元/月）</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-dark">
+                        <i class="fa fa-hospital"></i>
+                    </span>
+                    <input type="number" id="medicalEducationExpense" min="0" class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all duration-300 outline-none" placeholder="请输入医疗教育支出">
+                </div>
+            </div>
+
+            <div class="form-focus" id="otherExpenseContainer">
+                <label for="otherExpense" class="block text-sm font-medium text-gray-700 mb-1"><span style="color: red;">*</span>其他支出（元/月）</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-dark">
+                        <i class="fa fa-credit-card"></i>
+                    </span>
+                    <input type="number" id="otherExpense" min="0" class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all duration-300 outline-none" placeholder="请输入其他支出">
+                </div>
+            </div>
+        </div>
+    </section>
+
+      </div>
+
+      <!-- 提交按钮 -->
+      <div class="flex justify-center mt-8">
+        <button id="finalSubmitBtn" class="bg-primary hover:bg-primary/90 text-white px-8 py-3 rounded-lg text-lg font-medium transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center">
+          <i class="fa-solid fa-check-circle mr-2"></i>
+          确认提交信息
+        </button>
+      </div>
+    </main>
+
+    <footer class="bg-dark text-white py-8">
+      <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div>
+            <h4 class="text-lg font-bold mb-4">数据采集系统</h4>
+            <p class="text-gray-400">本系统用于收集个人基本信息，请如实填写以确保信息的准确性。</p>
+          </div>
+          <div>
+            <h4 class="text-lg font-bold mb-4">联系方式</h4>
+            <p class="text-gray-400 mb-2"><i class="fa-solid fa-phone mr-2"></i> 客服电话：18879868888</p>
+
+          </div>
+        </div>
+        <div class="border-t border-gray-700 mt-8 pt-6 text-center text-gray-400">
+          <p>© 2025 数据采集系统 版权所有</p>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- 提交成功弹窗 -->
+  <div id="successModal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
+    <div class="bg-white rounded-xl p-8 max-w-md w-full transform scale-95 transition-transform duration-300">
+      <div class="text-center">
+        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <i class="fa-solid fa-check text-green-500 text-2xl"></i>
+        </div>
+        <h3 class="text-xl font-bold mb-2">提交成功</h3>
+        <p class="text-gray-600 mb-6">您的信息已成功提交，我们将尽快处理</p>
+        <button id="closeModalBtn" class="bg-primary hover:bg-primary/90 text-white px-6 py-2 rounded-lg transition-colors duration-200">
+          确定
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 页面加载完成后显示内容
+    document.addEventListener('DOMContentLoaded', function() {
+      setTimeout(() => {
+        document.getElementById('loader').classList.add('opacity-0');
+        setTimeout(() => {
+          document.getElementById('loader').style.display = 'none';
+          document.getElementById('content').classList.remove('opacity-0');
+        }, 500);
+      }, 800);
+
+      // 导航栏滚动效果
+      window.addEventListener('scroll', function() {
+        const navbar = document.getElementById('navbar');
+        if (window.scrollY > 10) {
+          navbar.classList.add('py-2', 'shadow');
+          navbar.classList.remove('py-3');
+        } else {
+          navbar.classList.add('py-3');
+          navbar.classList.remove('py-2', 'shadow');
+        }
+      });
+
+      // 身份证号码输入事件处理
+      const idNumberInput = document.getElementById('idNumber');
+      const genderDisplay = document.getElementById('genderDisplay');
+      const ageDisplay = document.getElementById('ageDisplay');
+
+      idNumberInput.addEventListener('input', function() {
+        const idNumber = this.value.trim();
+
+        // 清空显示
+        genderDisplay.textContent = '未填写身份证号码';
+        ageDisplay.textContent = '未填写身份证号码';
+
+        // 身份证号码长度为15位或18位时进行验证
+        if (idNumber.length === 15 || idNumber.length === 18) {
+          try {
+            // 验证身份证号码格式
+            if (!validateIdNumber(idNumber)) {
+              genderDisplay.textContent = '身份证格式错误';
+              ageDisplay.textContent = '身份证格式错误';
+              return;
+            }
+
+            // 计算性别
+            const genderCode = idNumber.length === 18
+              ? parseInt(idNumber.charAt(16))
+              : parseInt(idNumber.charAt(14));
+            const gender = genderCode % 2 === 0 ? '女' : '男';
+            genderDisplay.textContent = gender;
+
+            // 计算年龄
+            const birthDate = idNumber.length === 18
+              ? new Date(idNumber.substring(6, 10), idNumber.substring(10, 12) - 1, idNumber.substring(12, 14))
+              : new Date('19' + idNumber.substring(6, 8), idNumber.substring(8, 10) - 1, idNumber.substring(10, 12));
+            const today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+              age--;
+            }
+            ageDisplay.textContent = age + '岁';
+
+            // 添加成功样式
+            genderDisplay.classList.add('text-green-600');
+            ageDisplay.classList.add('text-green-600');
+          } catch (error) {
+            genderDisplay.textContent = '身份证解析错误';
+            ageDisplay.textContent = '身份证解析错误';
+            genderDisplay.classList.remove('text-green-600');
+            ageDisplay.classList.remove('text-green-600');
+          }
+        } else {
+          genderDisplay.classList.remove('text-green-600');
+          ageDisplay.classList.remove('text-green-600');
+        }
+      });
+
+      // 身份证号码验证函数
+      function validateIdNumber(idNumber) {
+        // 简单验证，可根据实际需求扩展更复杂的验证逻辑
+        const reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+        return reg.test(idNumber);
+      }
+
+      // 表单提交处理
+      const submitBtn = document.getElementById('submitBtn');
+      const finalSubmitBtn = document.getElementById('finalSubmitBtn');
+      const successModal = document.getElementById('successModal');
+      const closeModalBtn = document.getElementById('closeModalBtn');
+
+      function handleSubmit() {
+        // 这里可以添加表单验证逻辑
+        const requiredFields = document.querySelectorAll('[required]');
+        let isValid = true;
+
+        requiredFields.forEach(field => {
+          if (!field.value) {
+            isValid = false;
+            field.classList.add('border-red-500');
+            setTimeout(() => {
+              field.classList.remove('border-red-500');
+            }, 2000);
+          }
+        });
+
+        // 验证身份证号码
+        if (!validateIdNumber(idNumberInput.value.trim())) {
+          isValid = false;
+          idNumberInput.classList.add('border-red-500');
+          setTimeout(() => {
+            idNumberInput.classList.remove('border-red-500');
+          }, 2000);
+        }
+
+        if (isValid) {
+          // 显示成功弹窗
+          successModal.classList.remove('opacity-0', 'pointer-events-none');
+          successModal.querySelector('div').classList.remove('scale-95');
+          successModal.querySelector('div').classList.add('scale-100');
+
+          // 滚动到顶部
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      }
+
+      submitBtn.addEventListener('click', handleSubmit);
+      finalSubmitBtn.addEventListener('click', handleSubmit);
+
+      // 关闭弹窗
+      closeModalBtn.addEventListener('click', function() {
+        successModal.classList.add('opacity-0', 'pointer-events-none');
+        successModal.querySelector('div').classList.remove('scale-100');
+        successModal.querySelector('div').classList.add('scale-95');
+      });
+
+      // 保存草稿功能
+      const saveDraftBtn = document.getElementById('saveDraftBtn');
+
+      saveDraftBtn.addEventListener('click', function() {
+        // 这里可以添加保存草稿的逻辑
+        alert('草稿已保存！');
+      });
+
+      // 平滑滚动
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+          e.preventDefault();
+
+          document.querySelector(this.getAttribute('href')).scrollIntoView({
+            behavior: 'smooth'
+          });
+        });
+      });
+
+      // 表单元素动画效果
+      const formFields = document.querySelectorAll('input, select, textarea');
+      formFields.forEach(field => {
+        field.addEventListener('focus', function() {
+          this.parentElement.classList.add('scale-[1.01]');
+          this.parentElement.style.transition = 'transform 0.2s ease';
+        });
+
+        field.addEventListener('blur', function() {
+          this.parentElement.classList.remove('scale-[1.01]');
+        });
+      });
+    });
+
+
+document.addEventListener('DOMContentLoaded', function() {
+  // 获取关键元素
+  const ageDisplay = document.getElementById('ageDisplay');
+  const genderDisplay = document.getElementById('genderDisplay');
+  const employmentSection = document.querySelector('[data-section="employment"]');
+  const incomeSection = document.querySelector('[data-section="income"]');
+
+  // 定义隐藏函数
+  function hideSections(shouldHide) {
+    if (shouldHide) {
+      employmentSection.classList.add('hidden');
+      incomeSection.classList.add('hidden');
+    } else {
+      employmentSection.classList.remove('hidden');
+      incomeSection.classList.remove('hidden');
+    }
+  }
+
+  // 监听身份证号码输入事件（假设已有该事件）
+  const idNumberInput = document.getElementById('idNumber');
+  if (idNumberInput) {
+    idNumberInput.addEventListener('input', function() {
+      updateFieldsVisibility();
+    });
+  }
+
+  // 更新字段可见性的函数
+  function updateFieldsVisibility() {
+    // 获取年龄和性别文本
+    const ageText = ageDisplay.textContent.trim();
+    const genderText = genderDisplay.textContent.trim();
+
+    // 处理年龄为空或非数字的情况
+    if (ageText === '未填写身份证号码' || isNaN(parseInt(ageText))) {
+      hideSections(true); // 隐藏就业和收支信息
+      return;
+    }
+
+    // 转换年龄为数字
+    const age = parseInt(ageText);
+
+    // 根据年龄和性别判断
+    const isMinor = age < 16;
+    const isRetiredMale = genderText === '男' && age > 65;
+    const isRetiredFemale = genderText === '女' && age > 65;
+
+    if (isMinor || isRetiredMale || isRetiredFemale) {
+      // 隐藏就业信息
+      employmentSection.classList.add('hidden');
+
+      // 仅当年龄<16时隐藏收支信息
+      if (isMinor) {
+        incomeSection.classList.add('hidden');
+      } else {
+        incomeSection.classList.remove('hidden');
+      }
+    } else {
+      // 显示所有信息
+      employmentSection.classList.remove('hidden');
+      incomeSection.classList.remove('hidden');
+    }
+  }
+
+  // 初始化处理
+  updateFieldsVisibility();
+});
+
+
+
+      // 根据教育程度动态显示/隐藏专业字段
+      const educationSelect = document.getElementById('education');
+      const majorRow = document.getElementById('majorRow');
+
+      function toggleMajorVisibility() {
+        const selectedValue = educationSelect.value;
+        if (selectedValue === 'junior_high_or_below' || selectedValue === 'high_school') {
+          // 隐藏专业字段
+          majorRow.classList.add('hidden');
+          // 清空专业字段值
+          document.getElementById('major').value = '';
+        } else if (selectedValue) {
+          // 显示专业字段
+          majorRow.classList.remove('hidden');
+          majorRow.classList.add('slide-down');
+        }
+      }
+      // 初始化专业字段的显示状态
+      toggleMajorVisibility();
+      // 监听教育程度选择变化
+      educationSelect.addEventListener('change', toggleMajorVisibility);
+
+
+  // 获取所有"是否有专业及职业技术等级"的单选按钮
+  const hasSkillRadios = document.querySelectorAll('input[name="hasSkill"]');
+  // 获取技能名称行
+  const skillNameRow = document.getElementById('skillNameRow');
+
+  // 为每个单选按钮添加变化事件监听器
+  hasSkillRadios.forEach(radio => {
+    radio.addEventListener('change', updateSkillNameVisibility);
+  });
+
+  // 初始化检查，确保页面加载时状态正确
+  updateSkillNameVisibility();
+
+  // 封装更新技能名称字段可见性的逻辑
+  function updateSkillNameVisibility() {
+    const checkedRadio = document.querySelector('input[name="hasSkill"]:checked');
+    const hasSkillValue = checkedRadio ? checkedRadio.value : '';
+
+    if (hasSkillValue === 'yes') {
+      // 选择"有"时显示技能名称字段并添加淡入动画
+      skillNameRow.classList.remove('hidden');
+      // 触发重排以确保动画生效
+      void skillNameRow.offsetWidth;
+      skillNameRow.classList.add('fade-in');
+    } else {
+      // 选择"无"或未选择任何选项时隐藏技能名称字段
+      skillNameRow.classList.add('hidden');
+      skillNameRow.classList.remove('fade-in');
+    }
+  }
+
+
+
+    // 监听就业地点选择变化
+    const employmentLocation = document.getElementById('employmentLocation');
+    if (employmentLocation) {
+      employmentLocation.addEventListener('change', function() {
+        toggleReturnIntentionField(this.value);
+      });
+
+      // 初始化回乡就业创业意愿字段显示状态
+      document.addEventListener('DOMContentLoaded', function() {
+        toggleReturnIntentionField(employmentLocation.value);
+      });
+    }
+
+    // 控制回乡就业创业意愿字段显示/隐藏
+    function toggleReturnIntentionField(location) {
+      const returnIntentionField = document.getElementById('returnIntentionField');
+
+      // 如果就业地点未选择，或者选择了县内就业、县外市内就业，则隐藏
+      if (!location || location === 'county' || location === 'city_outside_county') {
+        returnIntentionField.classList.add('hidden');
+      } else {
+        // 选择了市外省内就业、省外就业、国外就业，则显示
+        returnIntentionField.classList.remove('hidden');
+      }
+    }
+
+    // 监听回乡就业创业意愿选择变化
+    document.querySelectorAll('input[name="returnIntention"]').forEach(radio => {
+      radio.addEventListener('change', function() {
+        toggleReturnFields(this.value);
+      });
+    });
+
+    // 初始化回乡就业相关字段显示状态
+    document.addEventListener('DOMContentLoaded', function() {
+      // 检查是否有选中的回乡就业创业意愿选项
+      const selectedReturnIntention = document.querySelector('input[name="returnIntention"]:checked');
+      if (selectedReturnIntention) {
+        toggleReturnFields(selectedReturnIntention.value);
+      } else {
+        // 如果没有选中的选项，隐藏相关字段
+        toggleReturnFields('');
+      }
+    });
+
+    // 控制回乡就业相关字段显示/隐藏
+    function toggleReturnFields(intention) {
+      const industryIntentionField = document.getElementById('industryIntentionField');
+      const jobTypeIntentionField = document.getElementById('jobTypeIntentionField');
+
+      // 如果选择了"有"，显示相关字段
+      if (intention === 'yes') {
+        industryIntentionField.classList.remove('hidden');
+        jobTypeIntentionField.classList.remove('hidden');
+      } else {
+        // 如果选择了"无"或未选择，隐藏相关字段
+        industryIntentionField.classList.add('hidden');
+        jobTypeIntentionField.classList.add('hidden');
+      }
+    }
+
+    const employmentTypeSelect = document.getElementById('employmentType');
+    const industryField = document.getElementById('industryField');
+    const occupationField = document.getElementById('occupationField');
+    const businessTypeField = document.getElementById('businessTypeField');
+    const freelanceField = document.getElementById('freelanceField');
+
+    employmentTypeSelect.addEventListener('change', function () {
+      const selectedValue = this.value;
+      switch (selectedValue) {
+        case '':
+          industryField.classList.add('hidden');
+          occupationField.classList.add('hidden');
+          businessTypeField.classList.add('hidden');
+          freelanceField.classList.add('hidden');
+          break;
+        case 'post_employment':
+          industryField.classList.remove('hidden');
+          occupationField.classList.remove('hidden');
+          businessTypeField.classList.add('hidden');
+          freelanceField.classList.add('hidden');
+          break;
+        case'self_employment':
+          industryField.classList.add('hidden');
+          occupationField.classList.add('hidden');
+          businessTypeField.classList.remove('hidden');
+          freelanceField.classList.add('hidden');
+          break;
+        case 'flexible_employment':
+          industryField.classList.add('hidden');
+          occupationField.classList.add('hidden');
+          businessTypeField.classList.add('hidden');
+          freelanceField.classList.remove('hidden');
+          break;
+      }
+    });
+
+
+
+
+
+    // 就业意愿--获取DOM元素
+    const employmentRadios = document.querySelectorAll('input[name="employmentDesire"]');
+    const expectedIndustryField = document.getElementById('expectedIndustryField');
+    const expectedSalaryField = document.getElementById('expectedSalaryField');
+
+    // 初始检查
+    checkEmploymentDesire();
+
+    // 添加事件监听器
+    employmentRadios.forEach(radio => {
+      radio.addEventListener('change', checkEmploymentDesire);
+    });
+
+    // 检查就业意愿状态并更新UI
+    function checkEmploymentDesire() {
+      const selectedValue = document.querySelector('input[name="employmentDesire"]:checked')?.value;
+
+      // 控制字段显示/隐藏
+      if (selectedValue === 'yes') {
+        // 显示字段并添加动画
+        expectedIndustryField.classList.remove('hidden');
+        expectedSalaryField.classList.remove('hidden');
+
+        // 添加动画效果
+        setTimeout(() => {
+          expectedIndustryField.classList.add('animate-fadeIn');
+          expectedSalaryField.classList.add('animate-fadeIn');
+        }, 10);
+      } else {
+        // 隐藏字段
+        expectedIndustryField.classList.add('hidden');
+        expectedSalaryField.classList.add('hidden');
+
+        // 重置选择
+        document.getElementById('expectedIndustry').value = '';
+        document.getElementById('expectedSalary').value = '';
+      }
+    }
+
+
+
+
+
+
+        //是否有就业意愿与培训意向行业的关联
+        // 获取DOM元素
+        const trainingRadios = document.querySelectorAll('input[name="trainingDesire"]');
+        const trainingIntentionField = document.getElementById('trainingIntentionField');
+
+        // 初始检查
+        checkTrainingDesire();
+
+        // 添加事件监听器
+        trainingRadios.forEach(radio => {
+          radio.addEventListener('change', checkTrainingDesire);
+        });
+
+        // 检查培训意愿状态并更新UI
+        function checkTrainingDesire() {
+          const selectedValue = document.querySelector('input[name="trainingDesire"]:checked')?.value;
+
+          // 控制字段显示/隐藏
+          if (selectedValue === 'yes') {
+            // 显示字段并添加动画
+            trainingIntentionField.classList.remove('hidden');
+            setTimeout(() => {
+              trainingIntentionField.classList.add('animate-fadeIn');
+            }, 10);
+          } else {
+            // 隐藏字段
+            trainingIntentionField.classList.add('hidden');
+            // 重置选择
+            document.getElementById('trainingIntention').value = '';
+          }
+        }
+document.addEventListener('DOMContentLoaded', function() {
+  // 定义需要控制的字段及其状态映射
+  const fieldMap = {
+    employed: [
+      'employmentLocationField',    // 就业地点
+      'sameAddressField',           // 是否同常住地址
+      'currentAddressContainer',    // 现居住地址（需添加父容器）
+      'employmentTypeField'         // 就业形式
+    ],
+    unemployed: [
+      'unemploymentReasonContainer', // 未就业原因（需添加父容器）
+      'employmentDesireContainer'    // 是否有就业意愿（需添加父容器）
+    ],
+    all: [
+      'employmentLocationField',
+      'returnIntentionField',       // 是否有回乡就业创业意愿
+      'industryIntentionField',     // 回县就业意向从事行业
+      'jobTypeIntentionField',      // 回县就业意向岗位类型
+      'sameAddressField',
+      'currentAddressContainer',
+      'employmentTypeField',
+      'industryField',              // 从事行业
+      'occupationField',            // 从事工种
+      'businessTypeField',          // 创业类型
+      'freelanceField',             // 自由职业
+      'unemploymentReasonContainer',
+      'employmentDesireContainer',
+      'expectedIndustryField',      // 期望行业/岗位
+      'expectedSalaryField'         // 期望月收入
+    ]
+  };
+
+  // 获取就业状态单选按钮
+  const employmentStatusRadios = document.querySelectorAll('input[name="employmentStatus"]');
+  // 缓存所有字段元素
+  const fields = {};
+  fieldMap.all.forEach(id => {
+    fields[id] = document.getElementById(id);
+  });
+
+  // 更新字段可见性及必填属性
+  function updateFields(status) {
+    // 先隐藏所有就业相关字段并移除必填属性
+    fieldMap.all.forEach(id => {
+      if (fields[id]) {
+        fields[id].classList.add('hidden');
+
+        // 保存并移除必填属性
+        const inputs = fields[id].querySelectorAll('input[required], select[required]');
+        inputs.forEach(input => {
+          input.dataset.required = 'true';
+          input.removeAttribute('required');
+        });
+      }
+    });
+
+    // 根据状态显示对应字段并恢复必填属性
+    if (status === 'employed') {
+      fieldMap.employed.forEach(id => {
+        if (fields[id]) {
+          fields[id].classList.remove('hidden');
+
+          // 恢复必填属性
+          const inputs = fields[id].querySelectorAll('input[data-required="true"], select[data-required="true"]');
+          inputs.forEach(input => {
+            input.setAttribute('required', 'true');
+          });
+        }
+      });
+    } else if (status === 'unemployed') {
+      fieldMap.unemployed.forEach(id => {
+        if (fields[id]) {
+          fields[id].classList.remove('hidden');
+
+          // 恢复必填属性
+          const inputs = fields[id].querySelectorAll('input[data-required="true"], select[data-required="true"]');
+          inputs.forEach(input => {
+            input.setAttribute('required', 'true');
+          });
+        }
+      });
+    }
+    // 状态为空时保持所有字段隐藏（已在上方处理）
+  }
+
+  // 监听就业状态变化
+  employmentStatusRadios.forEach(radio => {
+    radio.addEventListener('change', function() {
+      const status = this.value;
+      updateFields(status);
+    });
+  });
+
+  // 初始化：如果没有选中项，默认隐藏所有就业相关字段
+  const selectedStatus = document.querySelector('input[name="employmentStatus"]:checked');
+  if (selectedStatus) {
+    updateFields(selectedStatus.value);
+  } else {
+    updateFields(''); // 处理未选择状态
+  }
+});
+        //家庭信息与收支信息之间的关联逻辑
+        // 获取相关元素
+        const relationshipSelect = document.getElementById('relationship');
+        const householdMembersContainer = document.getElementById('householdMembersContainer');
+        const idNumberInput = document.getElementById('idNumber');
+        const householdIdInput = document.getElementById('householdId');
+        const householdIdRequired = document.getElementById('householdIdRequired');
+
+        // 支出字段容器
+        const dailyExpenseContainer = document.getElementById('dailyExpenseContainer');
+        const medicalEducationExpenseContainer = document.getElementById('medicalEducationExpenseContainer');
+        const otherExpenseContainer = document.getElementById('otherExpenseContainer');
+
+        // 监听选择事件
+        relationshipSelect.addEventListener('change', function() {
+            const selectedValue = this.value;
+
+            // 处理户内人数显示逻辑
+            if (selectedValue === 'householder') {
+                householdMembersContainer.style.display = 'block';
+            } else {
+                householdMembersContainer.style.display = 'none';
+            }
+
+            // 处理户主身份证号码逻辑
+            if (selectedValue === 'householder') {
+                householdIdInput.value = idNumberInput.value;
+                householdIdInput.setAttribute('readonly', 'readonly');
+                householdIdInput.classList.add('readonly-field');
+                householdIdRequired.style.display = 'none';
+            } else {
+                householdIdInput.value = '';
+                householdIdInput.removeAttribute('readonly');
+                householdIdInput.classList.remove('readonly-field');
+                householdIdRequired.style.display = 'inline';
+            }
+
+            // 处理支出字段显示逻辑
+            if (selectedValue === 'householder') {
+                dailyExpenseContainer.style.display = 'block';
+                medicalEducationExpenseContainer.style.display = 'block';
+                otherExpenseContainer.style.display = 'block';
+            } else {
+                dailyExpenseContainer.style.display = 'none';
+                medicalEducationExpenseContainer.style.display = 'none';
+                otherExpenseContainer.style.display = 'none';
+            }
+        });
+
+        // 监听身份证号码输入变化
+        idNumberInput.addEventListener('input', function() {
+            if (relationshipSelect.value === 'householder') {
+                householdIdInput.value = this.value;
+            }
+        });
+
+        // 页面加载时检查初始状态
+        window.onload = function() {
+            const initialValue = relationshipSelect.value;
+
+            // 初始化户内人数显示
+            if (initialValue === 'householder') {
+                householdMembersContainer.style.display = 'block';
+            } else {
+                householdMembersContainer.style.display = 'none';
+            }
+
+            // 初始化户主身份证号码状态
+            if (initialValue === 'householder') {
+                householdIdInput.setAttribute('readonly', 'readonly');
+                householdIdInput.classList.add('readonly-field');
+                householdIdRequired.style.display = 'none';
+            } else {
+                householdIdRequired.style.display = 'inline';
+            }
+
+            // 初始化支出字段显示
+            if (initialValue === 'householder') {
+                dailyExpenseContainer.style.display = 'block';
+                medicalEducationExpenseContainer.style.display = 'block';
+                otherExpenseContainer.style.display = 'block';
+            } else {
+                dailyExpenseContainer.style.display = 'none';
+                medicalEducationExpenseContainer.style.display = 'none';
+                otherExpenseContainer.style.display = 'none';
+            }
+        };
+
+
+        //就业地址是否同常住地址
+        // 获取相关元素
+        const sameAddressRadios = document.querySelectorAll('input[name="sameAddress"]');
+        const residentialInput = document.getElementById('residential'); // 现常住地址隐藏字段
+        const currentAddressInput = document.getElementById('currentAddress'); // 现就业地址输入框
+
+        // 初始化同步状态
+        function syncAddress() {
+          const isSame = document.querySelector('input[name="sameAddress"]:checked')?.value === 'yes';
+          if (isSame) {
+            // 同步常住地址的值到就业地址
+            currentAddressInput.value = residentialInput.value;
+            // 禁用就业地址输入框
+            currentAddressInput.disabled = true;
+            currentAddressInput.classList.add('bg-gray-50', 'cursor-not-allowed'); // 添加视觉反馈样式
+          } else {
+            // 允许编辑，清空值（或保留原有值）
+            currentAddressInput.disabled = false;
+            currentAddressInput.classList.remove('bg-gray-50', 'cursor-not-allowed');
+          }
+        }
+
+        // 监听单选按钮变化
+        sameAddressRadios.forEach(radio => {
+          radio.addEventListener('change', syncAddress);
+        });
+
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', syncAddress);
+
+
+
+
+        document.addEventListener('keydown', function(e) {
+      // 阻止F12
+      if (e.key === 'F12') {
+        e.preventDefault();
+        alert('禁止打开开发者工具！');
+        return false;
+      }
+      // 阻止Ctrl+Shift+I
+      if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'i') {
+        e.preventDefault();
+        alert('禁止打开开发者工具！');
+        return false;
+      }
+      // 阻止Ctrl+Shift+J
+      if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'j') {
+        e.preventDefault();
+        alert('禁止打开开发者工具！');
+        return false;
+      }
+      // 阻止Ctrl+U
+      if (e.ctrlKey && e.key.toLowerCase() === 'u') {
+        e.preventDefault();
+        alert('禁止查看源代码！');
+        return false;
+      }
+    });
+
+
+
+
+
+
+
+  // ===== 户籍地址数据结构 =====
+  const registeredAddressData = [
+  {
+        "name": "碧洲镇",
+        "children": [
+            { "name": "安子前村" },
+            { "name": "白水村" },
+            { "name": "碧洲村" },
+            { "name": "碧洲居委会" },
+            { "name": "达泉村" },
+            { "name": "丰林村" },
+            { "name": "宏山村" },
+            { "name": "黄岗村" },
+            { "name": "栗头村" },
+            { "name": "良岗村" },
+            { "name": "珠湖村" },
+            { "name": "水兴居委会" }
+        ]
+    },
+    {
+        "name": "草林镇",
+        "children": [
+            { "name": "草林居委会" },
+            { "name": "草林村" },
+            { "name": "车源村" },
+            { "name": "大坪村" },
+            { "name": "峨岭村" },
+            { "name": "峨溪村" },
+            { "name": "蕃源村" },
+            { "name": "拱前村" },
+            { "name": "冠溪村" },
+            { "name": "楠木村" },
+            { "name": "唐虞村" },
+            { "name": "锡溪村" },
+            { "name": "溪下村" },
+            { "name": "悠富村" },
+            { "name": "源溪村" },
+            { "name": "新苑居委会" }
+        ]
+    },
+    {
+        "name": "城市社区管委会",
+        "children": [
+            { "name": "八角楼社区" },
+            { "name": "北门社区" },
+            { "name": "茶都社区" },
+            { "name": "城东社区" },
+            { "name": "东路社区" },
+            { "name": "龙泉社区" },
+            { "name": "商贸城社区" },
+            { "name": "水南社区" },
+            { "name": "四里街社区" },
+            { "name": "四厢街社区" },
+            { "name": "遂兴社区" },
+            { "name": "文献社区" },
+            { "name": "银云社区" }
+        ]
+    },
+    {
+        "name": "大汾镇",
+        "children": [
+            { "name": "草汾村" },
+            { "name": "滁峰村" },
+            { "name": "滁洲村" },
+            { "name": "大汾村" },
+            { "name": "高兴村" },
+            { "name": "和坪村" },
+            { "name": "红太阳社区" },
+            { "name": "江夏村" },
+            { "name": "乐天村" },
+            { "name": "鹿坑村" },
+            { "name": "螺汾村" },
+            { "name": "洛阳村" },
+            { "name": "山田村" },
+            { "name": "上坳村" },
+            { "name": "石花村" },
+            { "name": "石门岭村" },
+            { "name": "石狮村" },
+            { "name": "双嵊村" },
+            { "name": "桃坪村" },
+            { "name": "文溪村" },
+            { "name": "寨南村" },
+            { "name": "寨溪村" },
+            { "name": "竹坑村" },
+            { "name": "庄坑村" },
+            { "name": "永安社区" },
+            { "name": "永盛居委会" }
+        ]
+    },
+    {
+        "name": "大坑乡",
+        "children": [
+            { "name": "板坑村" },
+            { "name": "赤坑村" },
+            { "name": "大坑村" },
+            { "name": "大洲村" },
+            { "name": "高倚村" },
+            { "name": "禾溪村" },
+            { "name": "黄坑村" },
+            { "name": "九田村" },
+            { "name": "林溪村" },
+            { "name": "灵潭村" },
+            { "name": "罗坊村" },
+            { "name": "园州村" },
+            { "name": "长隆村" },
+            { "name": "尚美居委会" },
+            { "name": "尚文居委会" },
+            { "name": "下长龙村" }
+        ]
+    },
+    {
+        "name": "戴家埔乡",
+        "children": [
+            { "name": "川桃村" },
+            { "name": "大洞村" },
+            { "name": "戴家埔村" },
+            { "name": "福龙村" },
+            { "name": "立新村" },
+            { "name": "淋洋村" },
+            { "name": "七岭村" },
+            { "name": "阡陌村" },
+            { "name": "清秀村" },
+            { "name": "双桥岭村" },
+            { "name": "水东居委会" },
+            { "name": "戴圣居委会" }
+        ]
+    },
+    {
+        "name": "堆子前镇",
+        "children": [
+            { "name": "陂田村" },
+            { "name": "卜侯村" },
+            { "name": "堆前村" },
+            { "name": "河籁村" },
+            { "name": "久渡村" },
+            { "name": "堆子前居委会" },
+            { "name": "蒲芦村" },
+            { "name": "七坪村" },
+            { "name": "鄢背村" }
+        ]
+    },
+    {
+        "name": "高坪镇",
+        "children": [
+            { "name": "车下村" },
+            { "name": "高坪村" },
+            { "name": "禾坪村" },
+            { "name": "卷旋村" },
+            { "name": "茅坪村" },
+            { "name": "明坑村" },
+            { "name": "青草村" },
+            { "name": "源水口村" },
+            { "name": "桃洞村" },
+            { "name": "兴坪居委会" },
+            { "name": "中村村" }
+        ]
+    },
+    {
+        "name": "禾源镇",
+        "children": [
+            { "name": "洞溪村" },
+            { "name": "富溪村" },
+            { "name": "谷团村" },
+            { "name": "禾源村" },
+            { "name": "禾源居委会" },
+            { "name": "黄背村" },
+            { "name": "三溪村" },
+            { "name": "山坳村" },
+            { "name": "小黄坑村" },
+            { "name": "严塘村" },
+            { "name": "杂口村" }
+        ]
+    },
+    {
+        "name": "黄坑乡",
+        "children": [
+            { "name": "太坪村" },
+            { "name": "大沙村" },
+            { "name": "古洲村" },
+            { "name": "黄塖村" },
+            { "name": "黄果村" },
+            { "name": "黄坑圩" },
+            { "name": "黄溪村" },
+            { "name": "金河村" },
+            { "name": "金田村" },
+            { "name": "昆岗村" },
+            { "name": "龙口村" },
+            { "name": "三坑村" },
+            { "name": "水口村" },
+            { "name": "园潭村" },
+            { "name": "周园村" }
+        ]
+    },
+    {
+        "name": "巾石乡",
+        "children": [
+            { "name": "东坑村" },
+            { "name": "界溪村" },
+            { "name": "巾安居委会" },
+            { "name": "巾石村" },
+            { "name": "龙山村" },
+            { "name": "罗文村" },
+            { "name": "南安村" },
+            { "name": "丘坊村" },
+            { "name": "沙田村" },
+            { "name": "汤村村" },
+            { "name": "下湾村" },
+            { "name": "新安村" },
+            { "name": "银村村" },
+            { "name": "竹坪村" }
+        ]
+    },
+    {
+        "name": "枚江镇",
+        "children": [
+            { "name": "定口村" },
+            { "name": "东江村" },
+            { "name": "高垅村" },
+            { "name": "高升村" },
+            { "name": "豪溪村" },
+            { "name": "江美居委会" },
+            { "name": "莲溪村" },
+            { "name": "枚溪村" },
+            { "name": "钱塘村" },
+            { "name": "邵溪村" },
+            { "name": "舍上村" },
+            { "name": "石牌村" },
+            { "name": "下湖村" },
+            { "name": "瑶溪村" },
+            { "name": "圆岭村" },
+            { "name": "云岭居委会" },
+            { "name": "张塘村" },
+            { "name": "中团村" }
+        ]
+    },
+    {
+        "name": "南江乡",
+        "children": [
+            { "name": "南洞村" },
+            { "name": "南江村" },
+            { "name": "沙美村" },
+            { "name": "石鼓村" },
+            { "name": "圩镇居委会" },
+            { "name": "樟溪村" },
+            { "name": "中顺村" }
+        ]
+    },
+    {
+        "name": "泉江镇",
+        "children": [
+            { "name": "安下村" },
+            { "name": "卜村村" },
+            { "name": "窗溪村" },
+            { "name": "大桥村" },
+            { "name": "大屋村" },
+            { "name": "东皋村" },
+            { "name": "东门村" },
+            { "name": "高源村" },
+            { "name": "共同村" },
+            { "name": "共裕村" },
+            { "name": "黄练村" },
+            { "name": "集合村" },
+            { "name": "坑口村" },
+            { "name": "里口村" },
+            { "name": "良头村" },
+            { "name": "龙上村" },
+            { "name": "螺溪村" },
+            { "name": "木冈村" },
+            { "name": "盆珠村" },
+            { "name": "上坑村" },
+            { "name": "上溪村" },
+            { "name": "四农村" },
+            { "name": "太盆村" },
+            { "name": "桃园村" },
+            { "name": "五里村" },
+            { "name": "西庄村" },
+            { "name": "下坑村" },
+            { "name": "小溪村" },
+            { "name": "谐田村" },
+            { "name": "新林村" },
+            { "name": "新溪村" },
+            { "name": "新寨村" },
+            { "name": "洋村村" },
+            { "name": "银山村" },
+            { "name": "渔业村" },
+            { "name": "云岗村" },
+            { "name": "泽江村" },
+            { "name": "洲上村" }
+        ]
+    },
+    {
+        "name": "双桥乡",
+        "children": [
+            { "name": "东垓村" },
+            { "name": "马埠村" },
+            { "name": "双桥村" },
+            { "name": "双溪村" },
+            { "name": "潭溪村" },
+            { "name": "湾洲村" }
+        ]
+    },
+    {
+        "name": "汤湖镇",
+        "children": [
+            { "name": "白土村" },
+            { "name": "玕山村" },
+            { "name": "高塘村" },
+            { "name": "横圳村" },
+            { "name": "良洞村" },
+            { "name": "南屏村" },
+            { "name": "平溪村" },
+            { "name": "青茶村" },
+            { "name": "汤湖村" },
+            { "name": "围溪村" },
+            { "name": "小坑村" },
+            { "name": "新茗居委会" },
+            { "name": "油湖村" }
+        ]
+    },
+    {
+        "name": "五斗江乡",
+        "children": [
+            { "name": "车坳村" },
+            { "name": "丰禄村" },
+            { "name": "红军桥居委会" },
+            { "name": "联桥村" },
+            { "name": "米石村" },
+            { "name": "木洞村" },
+            { "name": "南坑村" },
+            { "name": "三和村" },
+            { "name": "五斗江村" },
+            { "name": "庄坑口村" }
+        ]
+    },
+    {
+        "name": "西溪乡",
+        "children": [
+            { "name": "横昌村" },
+            { "name": "黄源村" },
+            { "name": "奖连村" },
+            { "name": "廖坊村" },
+            { "name": "千秋村" },
+            { "name": "圩镇居委会" },
+            { "name": "文坳村" },
+            { "name": "西溪村" },
+            { "name": "长源村" }
+        ]
+    },
+    {
+        "name": "新江乡",
+        "children": [
+            { "name": "大旺村" },
+            { "name": "大庄村" },
+            { "name": "范背村" },
+            { "name": "富民村" },
+            { "name": "和溪村" },
+            { "name": "横石村" },
+            { "name": "金溪村" },
+            { "name": "三联村" },
+            { "name": "石坑村" },
+            { "name": "小湖村" },
+            { "name": "新成居委会" },
+            { "name": "新江村" }
+        ]
+    },
+    {
+        "name": "衙前镇",
+        "children": [
+            { "name": "塅尾村" },
+            { "name": "金田居委会" },
+            { "name": "上芫村" },
+            { "name": "石盘村" },
+            { "name": "士高村" },
+            { "name": "双镜村" },
+            { "name": "溪口村" },
+            { "name": "衙前村" }
+        ]
+    },
+    {
+        "name": "营盘圩乡",
+        "children": [
+            { "name": "大夏村" },
+            { "name": "禾坑村" },
+            { "name": "梅竹村" },
+            { "name": "桥头村" },
+            { "name": "桐古村" },
+            { "name": "小夏村" },
+            { "name": "秀峰居委会" },
+            { "name": "营盘村" }
+        ]
+    },
+    {
+        "name": "雩田镇",
+        "children": [
+            { "name": "城溪村" },
+            { "name": "村口村" },
+            { "name": "大饶村" },
+            { "name": "坊坑村" },
+            { "name": "皋村村" },
+            { "name": "横岭村" },
+            { "name": "加庄村" },
+            { "name": "江背村" },
+            { "name": "龙脑村" },
+            { "name": "龙团村" },
+            { "name": "龙溪村" },
+            { "name": "茂园村" },
+            { "name": "盘溪村" },
+            { "name": "彭汾村" },
+            { "name": "任溪村" },
+            { "name": "珊田村" },
+            { "name": "石下村" },
+            { "name": "堂境村" },
+            { "name": "塘背村" },
+            { "name": "田心村" },
+            { "name": "下塘村" },
+            { "name": "夏溪村" },
+            { "name": "新泽村" },
+            { "name": "沿溪村" },
+            { "name": "雁林村" },
+            { "name": "雩田村" },
+            { "name": "雩田居委会" },
+            { "name": "长盛村" },
+            { "name": "中洲村" }
+        ]
+    },
+    {
+        "name": "珠田镇",
+        "children": [
+            { "name": "达溪村" },
+            { "name": "大垅村" },
+            { "name": "黄塘村" },
+            { "name": "良洲村" },
+            { "name": "岭上村" },
+            { "name": "明珠居委会" },
+            { "name": "南村村" },
+            { "name": "仙溪村" },
+            { "name": "洋湖村" },
+            { "name": "珠田村" },
+            { "name": "珠溪村" }
+        ]
+    },
+    {
+        "name": "左安镇",
+        "children": [
+            { "name": "安全村" },
+            { "name": "安溪村" },
+            { "name": "白云村" },
+            { "name": "冲溪村" },
+            { "name": "东光村" },
+            { "name": "丰城村" },
+            { "name": "瓜塘村" },
+            { "name": "观音桥居委会" },
+            { "name": "鹤坑村" },
+            { "name": "横岗村" },
+            { "name": "红裕村" },
+            { "name": "黄金村" },
+            { "name": "圩镇居委会" },
+            { "name": "连河村" },
+            { "name": "莲塘村" },
+            { "name": "龙颈村" },
+            { "name": "曲溪村" },
+            { "name": "石窝村" },
+            { "name": "桃源村" },
+            { "name": "梯岭村" },
+            { "name": "望月村" },
+            { "name": "下园村" },
+            { "name": "扬芬村" },
+            { "name": "洋溪村" },
+            { "name": "圆溪村" },
+            { "name": "樟木村" }
+            ]
+        }
+    ];
+
+  // ===== 常住/就业地址数据结构 =====
+  const sharedAddressData = [
+      {
+          "name": "江西省",
+          "code": "江西省",
+          "children": [
+              {
+                  "name": "南昌市",
+                  "code": "南昌市",
+                  "children": [
+                      {
+                          "name": "东湖区",
+                          "code": "南昌市-东湖区",
+                          "children": [
+                              {
+                                  "name": "滕王阁街道",
+                                  "code": "南昌市-东湖区-滕王阁街道",
+                                  "children": [
+                                      { "name": "滕王阁社区", "code": "南昌市-东湖区-滕王阁街道-滕王阁社区" },
+                                      // 其他子项...
+                                  ]
+                              }
+                          ]
+                      }
+                  ]
+              }
+          ]
+      }
+  ];
+
+  // ===== 户籍地址选择器 =====
+  (function() {
+      // DOM元素
+      const selector = document.getElementById('address-selector');
+      const dropdown = document.getElementById('address-dropdown');
+      const content = document.getElementById('dropdown-content');
+      const selectedText = document.getElementById('selected-address');
+      const arrowIcon = document.getElementById('selector-arrow');
+      const inputField = document.getElementById('registeredAddress');
+
+      // 当前选中的各级地址
+      let selectedTown = null;
+      let selectedVillage = null;
+
+      // 初始化
+      function init() {
+          resetSelector();
+          renderTowns(registeredAddressData);
+
+          // 事件监听
+          selector.addEventListener('click', (e) => {
+              e.stopPropagation();
+              toggleDropdown();
+          });
+
+          document.addEventListener('click', () => {
+              toggleDropdown(false);
+          });
+      }
+
+      function resetSelector() {
+          selectedTown = null;
+          selectedVillage = null;
+          selectedText.textContent = '请选择户籍地址';
+          inputField.value = '';
+          dropdown.classList.add('hidden');
+          arrowIcon.classList.remove('rotate-180');
+          content.innerHTML = '';
+      }
+
+      function renderTowns(towns) {
+          resetSelector();
+
+          towns.forEach(town => {
+              const townItem = createAddressItem(town, 'town', () => {
+                  selectedTown = town;
+                  renderVillages(town.children);
+              });
+              content.appendChild(townItem);
+          });
+      }
+
+      function renderVillages(villages) {
+          content.innerHTML = '';
+
+          // 添加返回按钮
+          addBackButton(() => {
+              selectedTown = null;
+              renderTowns(registeredAddressData);
+          });
+
+          // 添加当前路径
+          addLocationHeader(selectedTown.name);
+
+          villages.forEach(village => {
+              const villageItem = createAddressItem(village, 'village', () => {
+                  selectedVillage = village;
+                  completeSelection();
+              });
+              content.appendChild(villageItem);
+          });
+      }
+
+      function createAddressItem(data, level, onClick) {
+          const item = document.createElement('div');
+          item.className = 'px-4 py-2.5 hover:bg-gray-100 rounded-lg cursor-pointer ml-2 transition-all duration-200 flex items-center';
+
+          if (level === 'town' && data.children?.length > 0) {
+              item.innerHTML = `
+                  <span>${data.name}</span>
+                  <i class="fa fa-chevron-right text-gray-400 text-xs ml-auto"></i>
+              `;
+          } else {
+              item.textContent = data.name;
+          }
+
+          item.addEventListener('click', (e) => {
+              onClick();
+              e.stopPropagation();
+          });
+
+          return item;
+      }
+
+      function addBackButton(onClick) {
+          const backButton = document.createElement('div');
+          backButton.className = 'px-4 py-2 hover:bg-gray-100 rounded-lg cursor-pointer text-sm text-gray-500 mb-2 flex items-center transition-all duration-200';
+          backButton.innerHTML = '<i class="fa fa-arrow-left mr-2"></i> 返回上一级';
+          backButton.addEventListener('click', (e) => {
+              onClick();
+              e.stopPropagation();
+          });
+          content.appendChild(backButton);
+      }
+
+      function addLocationHeader(townName) {
+          const title = document.createElement('div');
+          title.className = 'px-4 py-1.5 text-xs font-semibold text-gray-500 bg-gray-50 rounded-lg mb-1.5';
+          title.textContent = `当前选择：${townName}`;
+          content.appendChild(title);
+      }
+
+      function completeSelection() {
+          if (!selectedTown || !selectedVillage) return;
+
+          const fullAddress = `${selectedTown.name} ${selectedVillage.name}`;
+          selectedText.textContent = fullAddress;
+          inputField.value = `${selectedTown.name}-${selectedVillage.name}`;
+
+          toggleDropdown(false);
+          selector.classList.add('border-green-500');
+          setTimeout(() => selector.classList.remove('border-green-500'), 1000);
+      }
+
+      function toggleDropdown(show = undefined) {
+          if (show === undefined) {
+              dropdown.classList.toggle('hidden');
+              arrowIcon.classList.toggle('rotate-180');
+          } else {
+              dropdown.classList[show ? 'remove' : 'add']('hidden');
+              arrowIcon.classList[show ? 'add' : 'remove']('rotate-180');
+          }
+      }
+
+      // 立即执行初始化
+      init();
+  })();
+
+  // ===== 常住/就业地址选择器（共用逻辑） =====
+  (function() {
+      // 层级配置
+      const levelConfig = [
+          { level: 'province', label: '省' },
+          { level: 'city', label: '市' },
+          { level: 'district', label: '区' },
+          { level: 'town', label: '街道' },
+          { level: 'village', label: '社区' }
+      ];
+
+      // 初始化所有共用地址选择器
+      document.addEventListener('DOMContentLoaded', () => {
+          const containers = document.querySelectorAll('[data-shared-address-selector]');
+          containers.forEach(container => {
+              initSharedAddressSelector(container);
+          });
+      });
+
+      function initSharedAddressSelector(container) {
+          const selectorId = container.getAttribute('data-selector-id');
+          const selector = document.getElementById(`${selectorId}-selector`);
+          const dropdown = document.getElementById(`${selectorId}-dropdown`);
+          const content = document.getElementById(`${selectorId}-content`);
+          const selectedText = document.getElementById(`${selectorId}-selected`);
+          const arrowIcon = document.getElementById(`${selectorId}-arrow`);
+          const inputField = document.getElementById(`${selectorId}`);
+
+          // 每个选择器独立的状态
+          const state = {
+              selectedLevels: {
+                  province: null,
+                  city: null,
+                  district: null,
+                  town: null,
+                  village: null
+              },
+              container,
+              selector,
+              dropdown,
+              content,
+              selectedText,
+              arrowIcon,
+              inputField
+          };
+
+          function resetSelector() {
+              state.selectedLevels = {
+                  province: null,
+                  city: null,
+                  district: null,
+                  town: null,
+                  village: null
+              };
+
+              clearContent();
+              state.selectedText.textContent = '请选择省/市/区/街道/社区';
+              state.inputField.value = '';
+
+              renderLevelItems(sharedAddressData, 'province', null);
+          }
+
+          function clearContent() {
+              state.content.innerHTML = '';
+          }
+
+          function renderLevelItems(items, currentLevel, parentLevel) {
+              clearContent();
+
+              if (parentLevel) {
+                  addBackButton(state, () => {
+                      const levelIndex = levelConfig.findIndex(l => l.level === currentLevel);
+                      const prevLevel = levelConfig[levelIndex - 1].level;
+
+                      if (prevLevel === 'province') {
+                          renderLevelItems(sharedAddressData, prevLevel, null);
+                      } else {
+                          const grandParentLevel = levelConfig[levelIndex - 2].level;
+                          renderLevelItems(state.selectedLevels[grandParentLevel].children, prevLevel, grandParentLevel);
+                      }
+
+                      state.selectedLevels[currentLevel] = null;
+                  });
+              }
+
+              addLocationHeader(state, buildLocationPath(state, currentLevel));
+
+              items.forEach(item => {
+                  const itemElement = createAddressItem(state, item, currentLevel, () => {
+                      state.selectedLevels[currentLevel] = item;
+
+                      if (item.children && item.children.length > 0) {
+                          const nextLevelIndex = levelConfig.findIndex(l => l.level === currentLevel) + 1;
+                          if (nextLevelIndex < levelConfig.length) {
+                              const nextLevel = levelConfig[nextLevelIndex].level;
+                              renderLevelItems(item.children, nextLevel, currentLevel);
+                          }
+                      } else {
+                          completeSelection(state);
+                      }
+                  });
+
+                  state.content.appendChild(itemElement);
+              });
+          }
+
+          function createAddressItem(state, data, level, onClick) {
+              const item = document.createElement('div');
+              item.className = 'px-4 py-2.5 hover:bg-gray-100 rounded-lg cursor-pointer ml-2 transition-all duration-200 flex items-center';
+
+              if (data.children && data.children.length > 0) {
+                  item.innerHTML = `
+                      <span>${data.name}</span>
+                      <i class="fa fa-chevron-right text-gray-400 text-xs ml-auto"></i>
+                  `;
+              } else {
+                  item.textContent = data.name;
+              }
+
+              item.addEventListener('click', (e) => {
+                  onClick();
+                  e.stopPropagation();
+              });
+
+              return item;
+          }
+
+          function addBackButton(state, onClick) {
+              const backButton = document.createElement('div');
+              backButton.className = 'px-4 py-2 hover:bg-gray-100 rounded-lg cursor-pointer text-sm text-gray-500 mb-2 flex items-center transition-all duration-200';
+              backButton.innerHTML = '<i class="fa fa-arrow-left mr-2"></i> 返回上一级';
+              backButton.addEventListener('click', (e) => {
+                  onClick();
+                  e.stopPropagation();
+              });
+              state.content.appendChild(backButton);
+          }
+
+          function addLocationHeader(state, text) {
+              const title = document.createElement('div');
+              title.className = 'px-4 py-1.5 text-xs font-semibold text-gray-500 bg-gray-50 rounded-lg mb-1.5';
+              title.textContent = text;
+              state.content.appendChild(title);
+          }
+
+          function buildLocationPath(state, currentLevel) {
+              let path = '';
+              const levelIndex = levelConfig.findIndex(l => l.level === currentLevel);
+
+              for (let i = 0; i <= levelIndex; i++) {
+                  const level = levelConfig[i].level;
+                  if (state.selectedLevels[level]) {
+                      path += (path ? '/' : '') + state.selectedLevels[level].name;
+                  }
+              }
+
+              return path || '请选择';
+          }
+
+          function completeSelection(state) {
+              const fullAddress = Object.values(state.selectedLevels)
+                  .filter(level => level)
+                  .map(level => level.name)
+                  .join('/');
+
+              state.selectedText.textContent = fullAddress;
+              state.inputField.value = state.selectedLevels.village?.code || '';
+
+              toggleDropdown(state, false);
+
+              state.selector.classList.add('border-green-500');
+              setTimeout(() => {
+                  state.selector.classList.remove('border-green-500');
+              }, 1000);
+          }
+
+          function toggleDropdown(state, show) {
+              if (show === undefined) {
+                  state.dropdown.classList.toggle('hidden');
+                  state.arrowIcon.classList.toggle('rotate-180');
+              } else {
+                  state.dropdown.classList[show ? 'remove' : 'add']('hidden');
+                  state.arrowIcon.classList[show ? 'add' : 'remove']('rotate-180');
+              }
+          }
+
+          selector.addEventListener('click', (e) => {
+              e.stopPropagation();
+              toggleDropdown(state);
+          });
+
+          document.addEventListener('click', () => {
+              toggleDropdown(state, false);
+          });
+
+          resetSelector();
+      }
+  })();
+
+
+
+
+
+  </script>
+</body>
+</html>
