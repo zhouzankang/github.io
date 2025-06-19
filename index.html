@@ -61,18 +61,18 @@
     <!-- 顶部导航 -->
     <header class="bg-white sticky top-0 z-40 shadow-sm transition-all duration-300" id="navbar">
       <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-        <div class="flex items-center space-x-2">
+        <div class="flex items-center ">
           <i class="fa-solid fa-clipboard-list text-primary text-2xl"></i>
-          <h1 class="text-xl font-bold text-dark hidden sm:block">数据采集系统</h1>
+          <h1 class="text-lg font-bold text-dark ml-2">数据采集系统</h1>
         </div>
-        <div class="flex items-center space-x-4">
-          <button id="saveDraftBtn" class="text-primary hover:text-primary/80 transition-colors duration-200 flex items-center">
-            <i class="fa-solid fa-save mr-1"></i>
-            <span class="hidden sm:inline">保存草稿</span>
+        <div class="flex items-center space-x-3">
+          <button id="saveDraftBtn" class="flex items-center px-3 py-2 text-primary hover:text-primary/80 bg-gray-50 hover:bg-gray-100 rounded-lg transition-all duration-200">
+            <i class="fa-solid fa-save mr-2"></i>
+            <span>保存草稿</span>
           </button>
-          <button id="submitBtn" class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg transition-all duration-200 flex items-center">
-            <span class="hidden sm:inline mr-1">提交</span>
-            <i class="fa-solid fa-paper-plane"></i>
+          <button id="submitBtn" class="flex items-center px-4 py-2 bg-primary hover:bg-primary/90 text-white rounded-lg transition-all duration-20">
+            <i class="fa-solid fa-paper-plane mr-2"></i>
+            <span>提交</span>
           </button>
         </div>
       </div>
@@ -87,7 +87,7 @@
 
       <!-- 图片区域 - 固定本地图片 -->
       <section class="mb-8 relative h-[250px] md:h-[350px] overflow-hidden rounded-xl shadow-lg">
-        <img src="https://github.com/zhouzankang/github.io/blob/main/my-photo.jpg" alt="个人数据采集表宣传图" class="w-full h-full object-cover">
+        <img src="images/my-photo.jpg" alt="个人数据采集表宣传图" class="w-full h-full object-cover">
         <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
           <div class="p-6 text-white">
             <h3 class="text-xl font-bold mb-1">宣传图片</h3>
@@ -97,8 +97,7 @@
       </section>
 
       <!-- 表单内容区域 - 所有字段上下排列 -->
-      <div class="grid grid-cols-1 gap-8">
-
+      <div class="flex flex-col !important gap-8">
       <!-- 基本信息 -->
       <section class="bg-white rounded-xl p-6 card-shadow animate-fade-in">
         <div class="flex items-center mb-6">
@@ -108,84 +107,96 @@
           <h3 class="text-xl font-bold">基本信息</h3>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <!-- 姓名 -->
-          <div class="form-focus">
-            <label for="name" class="block text-sm font-medium text-dark mb-2">
-              <span class="text-red-500">*</span>姓名
-            </label>
-            <div class="relative">
-              <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-dark">
-                <i class="fa fa-signature"></i>
-              </span>
-              <input type="text" id="name" name="name" required
-                class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 input-focus transition-all duration-300 outline-none"
-                placeholder="请输入姓名">
-            </div>
-          </div>
-
-          <!-- 身份证号码 -->
-          <div class="form-focus">
-            <label for="idNumber" class="block text-sm font-medium text-dark mb-2">
-              <span class="text-red-500">*</span>身份证号码
-            </label>
-            <div class="relative">
-              <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-dark">
-                <i class="fa fa-id-card"></i>
-              </span>
-              <input type="text" id="idNumber" name="idCard" maxlength="18" required
-                class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 input-focus transition-all duration-300 outline-none"
-                placeholder="请输入18位身份证号码">
-            </div>
-            <div id="idNumberInfo" class="mt-2 text-sm text-neutral-dark hidden">
-              <span id="genderInfo"></span> | <span id="ageInfo"></span>
-            </div>
-          </div>
-
-          <!-- 性别（自动计算） -->
-          <div class="form-focus">
-            <label for="gender" class="block text-sm font-medium text-dark mb-2">
-              性别
-            </label>
-            <div class="relative">
-              <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-dark">
-                <i class="fa fa-venus-mars"></i>
-              </span>
-              <div class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 bg-gray-50">
-                <span id="genderDisplay" class="text-neutral-medium">未填写身份证号码</span>
+        <div class="space-y-6">
+            <!-- 姓名 -->
+            <div class="form-focus">
+              <label for="name" class="block text-sm font-medium text-dark mb-2">
+                <span class="text-red-500">*</span>姓名
+              </label>
+              <div class="relative">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-dark">
+                  <i class="fa fa-signature"></i>
+                </span>
+                <input type="text" id="name" name="name" oninput="this.value=this.value.replace(/[^\u4e00-\u9fa5]/g,'')" required
+                  class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 input-focus transition-all duration-300 outline-none"
+                  placeholder="请输入姓名">
+                <div class="hidden text-red-500 text-xs mt-1" id="name-error">
+                  <i class="fa fa-exclamation-circle mr-1"></i>
+                  <span id="name-error-text">姓名只能包含中文</span>
+                </div>
               </div>
             </div>
-          </div>
 
-          <!-- 年龄（自动计算） -->
-          <div class="form-focus">
-            <label for="age" class="block text-sm font-medium text-dark mb-2">
-              年龄
-            </label>
-            <div class="relative">
-              <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-dark">
-                <i class="fa fa-calendar"></i>
-              </span>
-              <div class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 bg-gray-50">
-                <span id="ageDisplay" class="text-neutral-medium">未填写身份证号码</span>
+            <!-- 身份证号码 -->
+            <div class="form-focus">
+              <label for="idNumber" class="block text-sm font-medium text-dark mb-2">
+                <span class="text-red-500">*</span>身份证号码
+              </label>
+              <div class="relative">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-dark">
+                  <i class="fa fa-id-card"></i>
+                </span>
+                <input type="text" id="idNumber" name="idCard" maxlength="18" required
+                  class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 input-focus transition-all duration-300 outline-none"
+                  placeholder="请输入身份证号码">
+                <div class="hidden text-red-500 text-xs mt-1" id="idNumber-error">
+                  <i class="fa fa-exclamation-circle mr-1"></i>
+                  <span id="idNumber-error-text">请输入有效的身份证号码</span>
+                </div>
+              </div>
+              <div id="idNumberInfo" class="mt-2 text-sm text-neutral-dark hidden">
+                <span id="genderInfo"></span> | <span id="ageInfo"></span>
               </div>
             </div>
-          </div>
 
-          <!-- 手机号码 -->
-          <div class="form-focus">
-            <label for="phone" class="block text-sm font-medium text-dark mb-2">
-              <span class="text-red-500">*</span>手机号码
-            </label>
-            <div class="relative">
-              <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-dark">
-                <i class="fa fa-phone"></i>
-              </span>
-              <input type="tel" id="phone" name="phone" required
-                class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 input-focus transition-all duration-300 outline-none"
-                placeholder="请输入手机号码">
+            <!-- 性别（自动计算） -->
+            <div class="form-focus">
+              <label for="gender" class="block text-sm font-medium text-dark mb-2">
+                性别
+              </label>
+              <div class="relative">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-dark">
+                  <i class="fa fa-venus-mars"></i>
+                </span>
+                <div class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 bg-gray-50">
+                  <span id="genderDisplay" class="text-neutral-medium">未填写身份证号码</span>
+                </div>
+              </div>
             </div>
-          </div>
+
+            <!-- 年龄（自动计算） -->
+            <div class="form-focus">
+              <label for="age" class="block text-sm font-medium text-dark mb-2">
+                年龄
+              </label>
+              <div class="relative">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-dark">
+                  <i class="fa fa-calendar"></i>
+                </span>
+                <div class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 bg-gray-50">
+                  <span id="ageDisplay" class="text-neutral-medium">未填写身份证号码</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 手机号码 -->
+            <div class="form-focus">
+              <label for="phone" class="block text-sm font-medium text-dark mb-2">
+                <span class="text-red-500">*</span>手机号码
+              </label>
+              <div class="relative">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-dark">
+                  <i class="fa fa-phone"></i>
+                </span>
+                <input type="tel" id="phone" name="phone" maxlength="12" required
+                  class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 input-focus transition-all duration-300 outline-none"
+                  placeholder="请输入手机号码">
+                <div class="hidden text-red-500 text-xs mt-1" id="phone-error">
+                  <i class="fa fa-exclamation-circle mr-1"></i>
+                  <span id="phone-error-text">请输入有效的手机号码</span>
+                </div>
+              </div>
+            </div>
 
           <!-- 户口性质 -->
           <div class="form-focus">
@@ -206,45 +217,103 @@
           </div>
 
           <!-- 户籍地址 -->
-          <div class="form-focus">
-            <label for="registeredAddress" class="block text-sm font-medium text-dark mb-2">
-              <span class="text-red-500">*</span>户籍地址
-            </label>
-            <div class="relative">
-              <div id="address-selector" class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 hover:border-primary/70 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 transition-all duration-300 cursor-pointer flex items-center justify-between">
-                <span id="selected-address" class="text-neutral-medium">请选择户籍地址</span>
-                <i id="selector-arrow" class="fa fa-chevron-down text-neutral-dark transition-transform duration-200"></i>
-              </div>
-              <div id="address-dropdown" class="absolute left-0 right-0 mt-1 bg-white rounded-lg shadow-lg border border-gray-200 z-10 hidden max-h-60 overflow-y-auto">
-                <div id="dropdown-content" class="p-1"></div>
-              </div>
-              <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-dark">
-                <i class="fa fa-home"></i>
-              </span>
+          <!-- 户籍地址 -->
+          <div class="address-panel bg-blue-50 p-5 rounded-lg shadow-sm">
+            <div class="flex justify-between items-center mb-4">
+              <h2 class="text-lg font-semibold text-gray-800 flex items-center">
+                <span class="ml-1 text-red-500">* </span>
+                <i class="fa fa-home text-primary mr-2"></i>户籍地址
+              </h2>
             </div>
-            <!-- 隐藏的输入框，用于表单提交 -->
-            <input type="hidden" id="registeredAddress" name="registeredAddress" required>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div class="relative">
+                <select id="householdCounty" class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm form-focus appearance-none bg-white">
+                  <option value="" disabled selected>请选择县</option>
+                </select>
+                <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                  <i class="fa fa-chevron-down text-gray-400"></i>
+                </div>
+              </div>
+
+              <div class="relative">
+                <select id="householdTown" class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm form-focus appearance-none bg-white" disabled>
+                  <option value="" disabled selected>请先选择县</option>
+                </select>
+                <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                  <i class="fa fa-chevron-down text-gray-400"></i>
+                </div>
+              </div>
+
+              <div class="relative">
+                <select id="householdVillage" class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm form-focus appearance-none bg-white" disabled>
+                  <option value="" disabled selected>请先选择镇</option>
+                </select>
+                <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                  <i class="fa fa-chevron-down text-gray-400"></i>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <!-- 现常住地址 -->
-          <div class="form-focus" data-shared-address-selector data-selector-id="residential">
-            <label for="residential" class="block text-sm font-medium text-dark mb-2">
-              <span class="text-red-500">*</span>现常住地址
-            </label>
-            <div class="relative">
-              <div id="residential-selector" class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 hover:border-primary/70 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 transition-all duration-300 cursor-pointer flex items-center justify-between">
-                <span id="residential-selected" class="text-neutral-medium">请选择省/市/区/街道/社区</span>
-                <i id="residential-arrow" class="fa fa-chevron-down text-neutral-dark transition-transform duration-200"></i>
-              </div>
-              <div id="residential-dropdown" class="absolute left-0 right-0 mt-1 bg-white rounded-lg shadow-lg border border-gray-200 z-20 hidden max-h-[280px] overflow-y-auto">
-                <div id="residential-content" class="p-1.5"></div>
-              </div>
-              <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-dark">
-                <i class="fa fa-home"></i>
-              </span>
+          <!-- 居住地址 -->
+          <div class="address-panel bg-green-50 p-5 rounded-lg shadow-sm">
+            <div class="flex justify-between items-center mb-4">
+              <h2 class="text-lg font-semibold text-gray-800 flex items-center">
+                <span class="ml-1 text-red-500">* </span>
+                <i class="fa fa-building text-green-600 mr-2"></i>居住地址
+              </h2>
             </div>
-            <!-- 隐藏的输入框，用于表单提交 -->
-            <input type="hidden" id="residential" name="residential" required>
+
+            <div class="flex items-center mb-4">
+              <input type="checkbox" id="sameAsHousehold" class="w-4 h-4 text-green-600 focus:ring-green-500 border-gray-300 rounded cursor-pointer">
+              <label for="sameAsHousehold" class="ml-2 text-sm text-gray-700 cursor-pointer">同户籍地址</label>
+            </div>
+
+            <!-- 只读文本输入框，默认隐藏 -->
+            <div id="residenceAddressText" class="hidden mb-4">
+              <div class="relative">
+                <input type="text" id="residenceAddressInput" placeholder="居住地址将自动同步为户籍地址"
+                  class="w-full px-4 py-2 border border-green-600 rounded-md shadow-sm focus:outline-none bg-gray-100 cursor-not-allowed"
+                  readonly>
+                <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                  <i class="fa fa-lock text-gray-400"></i>
+                </div>
+              </div>
+              <p class="text-xs text-gray-500 mt-1">
+                <i class="fa fa-info-circle text-green-500 mr-1"></i>
+                居住地址已自动设置为与户籍地址相同
+              </p>
+            </div>
+
+            <div id="residenceAddressFields" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div class="relative">
+                <select id="residenceProvince" class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm form-focus appearance-none bg-white">
+                  <option value="" disabled selected>请选择省份</option>
+                </select>
+                <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                  <i class="fa fa-chevron-down text-gray-400"></i>
+                </div>
+              </div>
+
+              <div class="relative">
+                <select id="residenceCity" class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm form-focus appearance-none bg-white" disabled>
+                  <option value="" disabled selected>请先选择省份</option>
+                </select>
+                <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                  <i class="fa fa-chevron-down text-gray-400"></i>
+                </div>
+              </div>
+
+              <div class="relative">
+                <select id="residenceDistrict" class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm form-focus appearance-none bg-white" disabled>
+                  <option value="" disabled selected>请先选择城市</option>
+                </select>
+                <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                  <i class="fa fa-chevron-down text-gray-400"></i>
+                </div>
+              </div>
+            </div>
           </div>
 
           <!-- 最高学历 -->
@@ -268,20 +337,24 @@
             </div>
           </div>
 
-          <!-- 专业字段 - 根据学历动态显示/隐藏 -->
-          <div id="majorRow" class="form-focus hidden">
-            <label for="major" class="block text-sm font-medium text-dark mb-2">
-              <span style="color: red;">*</span>专业名称
-            </label>
-            <div class="relative">
-              <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-dark">
-                <i class="fa fa-book"></i>
-              </span>
-              <input type="text" id="major" name="major"
-                class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 input-focus transition-all duration-300 outline-none"
-                placeholder="请输入专业名称">
-            </div>
+        <!-- 专业字段 - 根据学历动态显示/隐藏 -->
+        <div id="majorRow" class="form-focus hidden">
+          <label for="major" class="block text-sm font-medium text-dark mb-2">
+            <span style="color: red;">*</span>专业名称
+          </label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-dark">
+              <i class="fa fa-book"></i>
+            </span>
+            <input type="text" id="major" name="major"
+              class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 input-focus transition-all duration-300 outline-none"
+              placeholder="请输入专业名称"
+              oninput="onlyChinese(this)"
+              pattern="^[\u4e00-\u9fa5（）（）]{0,}$"
+              title="请输入中文字符"
+            >
           </div>
+        </div>
 
           <!-- 是否有技能 - 控制技能名称显示/隐藏 -->
           <div class="form-focus">
@@ -317,7 +390,6 @@
         </div>
       </section>
 
-
         <!-- 就业信息 -->
         <section class="bg-white rounded-xl p-6 card-shadow mb-6" data-section="employment">
           <div class="flex items-center mb-4">
@@ -327,7 +399,7 @@
             <h3 class="text-xl font-bold">就业信息</h3>
           </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="space-y-6">
 
             <!-- 劳动能力 -->
             <div class="form-focus">
@@ -341,11 +413,9 @@
                 <select id="laborAbility" name="laborAbility" required
                   class="w-full pl-10 pr-10 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all duration-300 outline-none appearance-none bg-white">
                   <option value="" disabled selected>请选择劳动能力</option>
-                  <option value="skilled">技能劳动力</option>
-                  <option value="ordinary">普通劳动力</option>
-                  <option value="weak">弱劳动力或半劳动力</option>
-                  <option value="lost">丧失劳动力</option>
-                  <option value="none">无劳动力</option>
+                  <option value="skilled">完全劳动能力</option>
+                  <option value="ordinary">部分劳动能力</option>
+                  <option value="weak">无劳动能力</option>
                 </select>
                 <span class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-neutral-dark">
                   <i class="fa fa-chevron-down"></i>
@@ -369,6 +439,66 @@
                 </label>
               </div>
             </div>
+
+          <!-- 就业地址 -->
+          <div class="address-panel bg-purple-50 p-5 rounded-lg shadow-sm">
+            <div class="flex justify-between items-center mb-4">
+              <h2 class="text-lg font-semibold text-gray-800 flex items-center">
+                <span class="ml-1 text-red-500">* </span>
+                <i class="fa fa-briefcase text-purple-600 mr-2"></i>就业地址
+              </h2>
+            </div>
+
+            <div class="flex items-center mb-4">
+              <input type="checkbox" id="sameAsResidence" class="w-4 h-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded cursor-pointer">
+              <label for="sameAsResidence" class="ml-2 text-sm text-gray-700 cursor-pointer">同居住地址</label>
+            </div>
+
+            <!-- 只读文本框，默认隐藏 -->
+            <div id="workAddressText" class="hidden mb-4">
+              <div class="relative">
+                <input type="text" id="workAddressInput" placeholder="就业地址将自动同步为居住地址"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none bg-gray-100 cursor-not-allowed"
+                  readonly>
+                <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                  <i class="fa fa-lock text-gray-400"></i>
+                </div>
+              </div>
+              <p class="text-xs text-gray-500 mt-1">
+                <i class="fa fa-info-circle text-purple-500 mr-1"></i>
+                就业地址已自动设置为与居住地址相同
+              </p>
+            </div>
+
+            <div id="workAddressFields" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div class="relative">
+                <select id="workProvince" class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm form-focus appearance-none bg-white">
+                  <option value=""disabled selected>请选择省份</option>
+                </select>
+                <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                  <i class="fa fa-chevron-down text-gray-400"></i>
+                </div>
+              </div>
+
+              <div class="relative">
+                <select id="workCity" class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm form-focus appearance-none bg-white" disabled>
+                  <option value=""disabled selected>请先选择省份</option>
+                </select>
+                <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                  <i class="fa fa-chevron-down text-gray-400"></i>
+                </div>
+              </div>
+
+              <div class="relative">
+                <select id="workDistrict" class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm form-focus appearance-none bg-white" disabled>
+                  <option value=""disabled selected>请先选择城市</option>
+                </select>
+                <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                  <i class="fa fa-chevron-down text-gray-400"></i>
+                </div>
+              </div>
+            </div>
+          </div>
 
             <!-- 就业地点 -->
             <div id="employmentLocationField" class="form-focus">
@@ -425,18 +555,13 @@
                 <select id="industryIntention" name="industryIntention" required
                   class="w-full pl-10 pr-10 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all duration-300 outline-none appearance-none bg-white">
                   <option value="" disabled selected>请选择行业</option>
-                  <option value="agriculture">农业</option>
                   <option value="manufacturing">制造业</option>
-                  <option value="construction">建筑业</option>
-                  <option value="wholesale">批发和零售业</option>
-                  <option value="transportation">交通运输业</option>
-                  <option value="food">住宿和餐饮业</option>
-                  <option value="information">信息传输业</option>
-                  <option value="finance">金融业</option>
-                  <option value="real_estate">房地产业</option>
-                  <option value="education">教育</option>
-                  <option value="health">卫生和社会工作</option>
-                  <option value="other">其他行业</option>
+                    <option value="construction">建筑业</option>
+                    <option value="wholesale">批发和零售业</option>
+                    <option value="food">住宿和餐饮业</option>
+                    <option value="transportation">交通运输业</option>
+                    <option value="food">家政服务业</option>
+                    <option value="other">其它行业</option>
                 </select>
                 <span class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-neutral-dark">
                   <i class="fa fa-chevron-down"></i>
@@ -457,65 +582,18 @@
                 <select id="jobTypeIntention" name="jobTypeIntention" required
                   class="w-full pl-10 pr-10 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all duration-300 outline-none appearance-none bg-white">
                   <option value="" disabled selected>请选择岗位类型</option>
-                  <option value="management">管理岗位</option>
-                  <option value="technical">技术岗位</option>
-                  <option value="sales">销售岗位</option>
-                  <option value="service">服务岗位</option>
-                  <option value="production">生产岗位</option>
-                  <option value="logistics">物流岗位</option>
-                  <option value="administration">行政岗位</option>
-                  <option value="finance">财务岗位</option>
-                  <option value="hr">人力资源</option>
-                  <option value="other">其他岗位</option>
+                  <option value="management">普工</option>
+                    <option value="technical">技工（含打零工）</option>
+                    <option value="sales">专业技术人员</option>
+                    <option value="service">行政管理人员</option>
+                    <option value="production">个体经营人员</option>
+                    <option value="other">其它岗位</option>
                 </select>
                 <span class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-neutral-dark">
                   <i class="fa fa-chevron-down"></i>
                 </span>
               </div>
             </div>
-
-            <!-- 是否同常住地址 -->
-            <div id="sameAddressField" class="form-focus">
-              <label class="block text-sm font-medium text-gray-700 mb-1">
-                <span class="text-red-500">*</span>就业地址：是否同常住地址
-              </label>
-              <div class="flex space-x-4 pt-2">
-                <label class="inline-flex items-center">
-                  <input type="radio" name="sameAddress" value="yes" class="w-4 h-4 text-primary focus:ring-primary">
-                  <span class="ml-2">是</span>
-                </label>
-                <label class="inline-flex items-center">
-                  <input type="radio" name="sameAddress" value="no" class="w-4 h-4 text-primary focus:ring-primary">
-                  <span class="ml-2">否</span>
-                </label>
-              </div>
-            </div>
-
-            <!-- 修改后的现就业地址文本输入 -->
-            <div id="currentAddressContainer" class="form-focus">
-              <label for="currentAddress" class="block text-sm font-medium text-dark mb-2">
-                  <span class="text-red-500">*</span>现就业地址
-              </label>
-              <div class="relative">
-                  <input
-                      type="text"
-                      id="currentAddress"
-                      name="currentAddress"
-                      required
-                      placeholder="请输入省/市/区/街道/社区地址"
-                      class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 hover:border-primary/70 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300"
-                  >
-                  <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-dark">
-                      <i class="fa fa-map-marker"></i>
-                  </span>
-              </div>
-              <div class="text-sm text-gray-500 mt-1">示例：浙江省杭州市余杭区五常街道阿里巴巴园区</div>
-                  <!-- 添加同步提示 -->
-              <div class="text-sm text-gray-500 mt-1" id="addressSyncTip">
-                若是否同常住地址选择“是”，此处将自动填充常住地址
-              </div>
-            </div>
-
 
               <!-- 就业形式 -->
               <div id="employmentTypeField" class="form-focus">
@@ -759,17 +837,20 @@
             <select id="trainingIntention" name="trainingIntention" required
               class="w-full pl-10 pr-10 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all duration-300 outline-none appearance-none bg-white">
               <option value="" disabled selected>请选择培训行业</option>
-              <option value="agriculture">农业技术</option>
-              <option value="manufacturing">制造业技术</option>
-              <option value="electronics">电子电器维修</option>
-              <option value="construction">建筑技能</option>
-              <option value="it">信息技术</option>
-              <option value="business">商业管理</option>
-              <option value="beauty">美容美发</option>
-              <option value="cooking">餐饮服务</option>
-              <option value="logistics">物流管理</option>
-              <option value="healthcare">健康护理</option>
-              <option value="other">其他行业</option>
+              <option value="agriculture">农机手</option>
+              <option value="manufacturing">计算机操作员</option>
+              <option value="electronics">网络就业</option>
+              <option value="construction">中西式面点师</option>
+              <option value="it">家政</option>
+              <option value="business">安全员</option>
+              <option value="beauty">育婴员</option>
+              <option value="cooking">月嫂</option>
+              <option value="logistics">护理员</option>
+              <option value="healthcare">电子商务</option>
+              <option value="healthcare">会计</option>
+              <option value="healthcare">美容美发师</option>
+              <option value="healthcare">创业培训</option>
+              <option value="other">其它</option>
             </select>
             <span class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-neutral-dark">
               <i class="fa fa-chevron-down"></i>
@@ -798,27 +879,48 @@
           </div>
         </section>
 
-    <section class="bg-white rounded-xl p-6 shadow-md mb-6">
-        <div class="flex items-center mb-4">
-            <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-500 mr-3">
-                <i class="fa-solid fa-home"></i>
-            </div>
-            <h3 class="text-xl font-bold">家庭信息</h3>
+<section class="bg-white rounded-xl p-6 shadow-md mb-6">
+    <div class="flex items-center mb-4">
+        <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-500 mr-3">
+            <i class="fa-solid fa-home"></i>
         </div>
+        <h3 class="text-xl font-bold">家庭信息</h3>
+    </div>
 
+        <!-- 将所有表单字段放入同一个space-y-6容器 -->
         <div class="space-y-6">
+
+            <!-- 户主姓名 -->
             <div class="form-focus">
-                <label for="householdName" class="block text-sm font-medium text-gray-700 mb-1"> <span class="text-red-500">*</span>户主姓名</label>
+                <label for="householdName" class="block text-sm font-medium text-gray-700 mb-1">
+                    <span class="text-red-500">*</span>户主姓名
+                </label>
                 <div class="relative">
                     <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-dark">
                         <i class="fa fa-user"></i>
                     </span>
-                    <input type="text" id="householdName" class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all duration-300 outline-none" placeholder="请输入户主姓名" required>
+                    <input
+                        type="text"
+                        id="householdName"
+                        class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all duration-300 outline-none"
+                        placeholder="请输入户主姓名"
+                        required
+                        oninput="this.value=this.value.replace(/[^\u4e00-\u9fa5]/g,'')"
+                        pattern="^[\u4e00-\u9fa5]+$"
+                        title="请输入中文字符，不允许空格"
+                    >
+                    <div id="householdName-error" class="hidden mt-1 text-sm text-red-500">
+                        <i class="fa fa-exclamation-circle mr-1"></i>
+                        <span id="householdName-error-text">户主姓名只能包含中文字符</span>
+                    </div>
                 </div>
             </div>
 
+            <!-- 与户主关系 -->
             <div class="form-focus">
-                <label for="relationship" class="block text-sm font-medium text-gray-700 mb-1"> <span class="text-red-500">*</span>与户主关系</label>
+                <label for="relationship" class="block text-sm font-medium text-gray-700 mb-1">
+                    <span class="text-red-500">*</span>与户主关系
+                </label>
                 <div class="relative">
                     <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-dark">
                         <i class="fa fa-users"></i>
@@ -844,9 +946,11 @@
                 </div>
             </div>
 
-
+            <!-- 户主身份证号码 -->
             <div class="form-focus" id="householdIdContainer">
-                <label for="householdId" class="block text-sm font-medium text-gray-700 mb-1"> <span id="householdIdRequired" class="text-red-500">*</span>户主身份证号码</label>
+                <label for="householdId" class="block text-sm font-medium text-gray-700 mb-1">
+                    <span id="householdIdRequired" class="text-red-500">*</span>户主身份证号码
+                </label>
                 <div class="relative">
                     <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-dark">
                         <i class="fa fa-id-card"></i>
@@ -858,8 +962,11 @@
                 </div>
             </div>
 
+            <!-- 户内人数 -->
             <div class="form-focus" id="householdMembersContainer">
-                <label for="householdMembers" class="block text-sm font-medium text-gray-700 mb-1"> <span class="text-red-500">*</span>户内人数</label>
+                <label for="householdMembers" class="block text-sm font-medium text-gray-700 mb-1">
+                    <span class="text-red-500">*</span>户内人数
+                </label>
                 <div class="relative">
                     <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-dark">
                         <i class="fa fa-users"></i>
@@ -1012,119 +1119,255 @@
         }
       });
 
-      // 身份证号码输入事件处理
+
+        // 姓名的正则校验
+        // 获取姓名输入框和错误提示元素
+        const nameInput = document.getElementById('name');
+        const nameError = document.getElementById('name-error');
+        const nameErrorText = document.getElementById('name-error-text');
+
+        // 添加输入事件监听
+        nameInput.addEventListener('input', function() {
+          validateName();
+        });
+
+        // 添加失焦事件监听
+        nameInput.addEventListener('blur', function() {
+          validateName(true);
+        });
+
+        // 姓名校验函数 - 不允许空格
+        function validateName(showError = false) {
+          const value = nameInput.value.trim();
+
+          // 清除之前的错误状态
+          nameInput.classList.remove('border-red-500');
+          nameError.classList.add('hidden');
+
+          // 如果值为空，由required属性处理
+          if (value === '') {
+            return true;
+          }
+
+          // 正则表达式：只允许中文，不允许空格
+          const regex = /^[\u4e00-\u9fa5]+$/;
+
+          if (!regex.test(value)) {
+            if (showError) {
+              nameInput.classList.add('border-red-500');
+              nameError.classList.remove('hidden');
+              // 设置错误提示文本
+              nameErrorText.textContent = '姓名只能包含中文字符';
+            }
+            return false;
+          }
+
+          return true;
+        }
+
+
+
+      // 身份证校验，并计算年龄+性别
+      // 获取DOM元素
       const idNumberInput = document.getElementById('idNumber');
+      const idNumberError = document.getElementById('idNumber-error');
+      const idNumberErrorText = document.getElementById('idNumber-error-text');
+      const idNumberInfo = document.getElementById('idNumberInfo');
+      const genderInfo = document.getElementById('genderInfo');
+      const ageInfo = document.getElementById('ageInfo');
       const genderDisplay = document.getElementById('genderDisplay');
       const ageDisplay = document.getElementById('ageDisplay');
 
-      idNumberInput.addEventListener('input', function() {
-        const idNumber = this.value.trim();
-
-        // 清空显示
-        genderDisplay.textContent = '未填写身份证号码';
-        ageDisplay.textContent = '未填写身份证号码';
-
-        // 身份证号码长度为15位或18位时进行验证
-        if (idNumber.length === 15 || idNumber.length === 18) {
-          try {
-            // 验证身份证号码格式
-            if (!validateIdNumber(idNumber)) {
-              genderDisplay.textContent = '身份证格式错误';
-              ageDisplay.textContent = '身份证格式错误';
-              return;
-            }
-
-            // 计算性别
-            const genderCode = idNumber.length === 18
-              ? parseInt(idNumber.charAt(16))
-              : parseInt(idNumber.charAt(14));
-            const gender = genderCode % 2 === 0 ? '女' : '男';
-            genderDisplay.textContent = gender;
-
-            // 计算年龄
-            const birthDate = idNumber.length === 18
-              ? new Date(idNumber.substring(6, 10), idNumber.substring(10, 12) - 1, idNumber.substring(12, 14))
-              : new Date('19' + idNumber.substring(6, 8), idNumber.substring(8, 10) - 1, idNumber.substring(10, 12));
-            const today = new Date();
-            let age = today.getFullYear() - birthDate.getFullYear();
-            const monthDiff = today.getMonth() - birthDate.getMonth();
-            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-              age--;
-            }
-            ageDisplay.textContent = age + '岁';
-
-            // 添加成功样式
-            genderDisplay.classList.add('text-green-600');
-            ageDisplay.classList.add('text-green-600');
-          } catch (error) {
-            genderDisplay.textContent = '身份证解析错误';
-            ageDisplay.textContent = '身份证解析错误';
-            genderDisplay.classList.remove('text-green-600');
-            ageDisplay.classList.remove('text-green-600');
-          }
-        } else {
-          genderDisplay.classList.remove('text-green-600');
-          ageDisplay.classList.remove('text-green-600');
-        }
-      });
+      // 添加事件监听
+      idNumberInput.addEventListener('input', validateIdNumber);
+      idNumberInput.addEventListener('blur', validateIdNumber);
 
       // 身份证号码验证函数
-      function validateIdNumber(idNumber) {
-        // 简单验证，可根据实际需求扩展更复杂的验证逻辑
-        const reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
-        return reg.test(idNumber);
-      }
+      function validateIdNumber() {
+        const idNumber = idNumberInput.value.trim();
 
-      // 表单提交处理
-      const submitBtn = document.getElementById('submitBtn');
-      const finalSubmitBtn = document.getElementById('finalSubmitBtn');
-      const successModal = document.getElementById('successModal');
-      const closeModalBtn = document.getElementById('closeModalBtn');
+        // 清除之前的错误状态
+        idNumberInput.classList.remove('border-red-500');
+        idNumberError.classList.add('hidden');
+        idNumberInfo.classList.add('hidden');
 
-      function handleSubmit() {
-        // 这里可以添加表单验证逻辑
-        const requiredFields = document.querySelectorAll('[required]');
-        let isValid = true;
-
-        requiredFields.forEach(field => {
-          if (!field.value) {
-            isValid = false;
-            field.classList.add('border-red-500');
-            setTimeout(() => {
-              field.classList.remove('border-red-500');
-            }, 2000);
-          }
-        });
+        // 如果为空，不进行验证
+        if (idNumber === '') {
+          resetGenderAndAge();
+          return;
+        }
 
         // 验证身份证号码
-        if (!validateIdNumber(idNumberInput.value.trim())) {
-          isValid = false;
+        const validationResult = checkIdNumberValidity(idNumber);
+
+        if (!validationResult.valid) {
+          // 验证失败，显示错误信息
           idNumberInput.classList.add('border-red-500');
-          setTimeout(() => {
-            idNumberInput.classList.remove('border-red-500');
-          }, 2000);
+          idNumberError.classList.remove('hidden');
+          idNumberErrorText.textContent = validationResult.message;
+          resetGenderAndAge();
+          return;
         }
 
-        if (isValid) {
-          // 显示成功弹窗
-          successModal.classList.remove('opacity-0', 'pointer-events-none');
-          successModal.querySelector('div').classList.remove('scale-95');
-          successModal.querySelector('div').classList.add('scale-100');
+        // 验证成功，提取信息
+        const { gender, age } = extractInfoFromIdNumber(idNumber);
 
-          // 滚动到顶部
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+        // 更新显示
+        genderInfo.textContent = `性别: ${gender}`;
+        ageInfo.textContent = `年龄: ${age}岁`;
+        idNumberInfo.classList.remove('hidden');
+
+        genderDisplay.textContent = gender;
+        ageDisplay.textContent = `${age}岁`;
+
+        // 移除可能存在的错误样式
+        idNumberInput.classList.remove('border-red-500');
+        idNumberError.classList.add('hidden');
       }
 
-      submitBtn.addEventListener('click', handleSubmit);
-      finalSubmitBtn.addEventListener('click', handleSubmit);
+      // 重置性别和年龄显示
+      function resetGenderAndAge() {
+        genderDisplay.textContent = '未填写身份证号码';
+        ageDisplay.textContent = '未填写身份证号码';
+      }
 
-      // 关闭弹窗
-      closeModalBtn.addEventListener('click', function() {
-        successModal.classList.add('opacity-0', 'pointer-events-none');
-        successModal.querySelector('div').classList.remove('scale-100');
-        successModal.querySelector('div').classList.add('scale-95');
-      });
+      // 验证身份证号码有效性
+      function checkIdNumberValidity(idNumber) {
+        // 检查长度
+        if (idNumber.length !== 15 && idNumber.length !== 18) {
+          return { valid: false, message: '身份证号码长度必须为15位或18位' };
+        }
+
+        // 18位身份证验证
+        if (idNumber.length === 18) {
+          return validate18DigitIdNumber(idNumber);
+        }
+
+        // 15位身份证验证
+        return validate15DigitIdNumber(idNumber);
+      }
+
+      // 验证18位身份证
+      function validate18DigitIdNumber(idNumber) {
+        // 正则验证格式
+        const regex = /^[1-9]\d{5}(18|19|20)\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])\d{3}[0-9Xx]$/;
+        if (!regex.test(idNumber)) {
+          return { valid: false, message: '身份证号码格式不正确' };
+        }
+
+        // 验证出生日期
+        const birthDate = extractBirthDate(idNumber);
+        if (!isValidDate(birthDate)) {
+          return { valid: false, message: '身份证号码中的出生日期无效' };
+        }
+
+        // 验证校验码
+        const factors = [7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2];
+        const checkCodes = ['1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2'];
+
+        let sum = 0;
+        for (let i = 0; i < 17; i++) {
+          sum += parseInt(idNumber.charAt(i)) * factors[i];
+        }
+
+        const mod = sum % 11;
+        const expectedCheckCode = checkCodes[mod];
+        const actualCheckCode = idNumber.charAt(17).toUpperCase();
+
+        if (expectedCheckCode !== actualCheckCode) {
+          return { valid: false, message: '身份证号码校验码错误' };
+        }
+
+        return { valid: true };
+      }
+
+      // 验证15位身份证
+      function validate15DigitIdNumber(idNumber) {
+        // 正则验证格式
+        const regex = /^[1-9]\d{5}\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])\d{3}$/;
+        if (!regex.test(idNumber)) {
+          return { valid: false, message: '15位身份证号码格式不正确' };
+        }
+
+        // 验证出生日期（15位身份证年份只有后两位，默认补19）
+        const year = `19${idNumber.substring(6, 8)}`;
+        const month = idNumber.substring(8, 10);
+        const day = idNumber.substring(10, 12);
+        const birthDate = `${year}-${month}-${day}`;
+
+        if (!isValidDate(birthDate)) {
+          return { valid: false, message: '身份证号码中的出生日期无效' };
+        }
+
+        return { valid: true };
+      }
+
+      // 从身份证号码提取信息
+      function extractInfoFromIdNumber(idNumber) {
+        let birthDate, genderCode;
+
+        if (idNumber.length === 18) {
+          // 18位身份证
+          birthDate = extractBirthDate(idNumber);
+          genderCode = parseInt(idNumber.charAt(16));
+        } else {
+          // 15位身份证
+          const year = `19${idNumber.substring(6, 8)}`;
+          const month = idNumber.substring(8, 10);
+          const day = idNumber.substring(10, 12);
+          birthDate = `${year}-${month}-${day}`;
+          genderCode = parseInt(idNumber.charAt(14));
+        }
+
+        // 计算年龄（修改此处，确保当年出生的年龄为1岁）
+        const age = calculateAge(birthDate);
+
+        // 判断性别
+        const gender = genderCode % 2 === 0 ? '女' : '男';
+
+        return { gender, age };
+      }
+
+      // 提取出生日期
+      function extractBirthDate(idNumber) {
+        const year = idNumber.substring(6, 10);
+        const month = idNumber.substring(10, 12);
+        const day = idNumber.substring(12, 14);
+        return `${year}-${month}-${day}`;
+      }
+
+      // 验证日期有效性
+      function isValidDate(dateString) {
+        const regEx = /^\d{4}-\d{2}-\d{2}$/;
+        if (!dateString.match(regEx)) return false;
+
+        const d = new Date(dateString);
+        if (isNaN(d.getTime())) return false;
+
+        // 检查是否是合法日期（避免类似2023-02-30的情况）
+        return d.toISOString().slice(0, 10) === dateString;
+      }
+
+      // 计算年龄（按中国传统虚岁计算，出生即为1岁）
+      function calculateAge(birthDateString) {
+        const birthDate = new Date(birthDateString);
+        const today = new Date();
+
+        let age = today.getFullYear() - birthDate.getFullYear();
+
+        // 如果出生月份和日期晚于当前月份和日期，虚岁减1
+        // 否则虚岁等于实际年份差加1（出生时算1岁）
+        if (
+          today.getMonth() < birthDate.getMonth() ||
+          (today.getMonth() === birthDate.getMonth() && today.getDate() < birthDate.getDate())
+        ) {
+          age = age; // 实际年份差，虚岁不减1
+        }
+
+        // 确保当年出生的年龄为1岁
+        return age === 0 ? 1 : age + 1;
+      }
+
 
       // 保存草稿功能
       const saveDraftBtn = document.getElementById('saveDraftBtn');
@@ -1160,72 +1403,193 @@
     });
 
 
-document.addEventListener('DOMContentLoaded', function() {
-  // 获取关键元素
-  const ageDisplay = document.getElementById('ageDisplay');
-  const genderDisplay = document.getElementById('genderDisplay');
-  const employmentSection = document.querySelector('[data-section="employment"]');
-  const incomeSection = document.querySelector('[data-section="income"]');
 
-  // 定义隐藏函数
-  function hideSections(shouldHide) {
-    if (shouldHide) {
-      employmentSection.classList.add('hidden');
-      incomeSection.classList.add('hidden');
-    } else {
-      employmentSection.classList.remove('hidden');
-      incomeSection.classList.remove('hidden');
-    }
-  }
+      // 获取手机号输入框和错误提示元素
+      const phoneInput = document.getElementById('phone');
+      const phoneError = document.getElementById('phone-error');
+      const phoneErrorText = document.getElementById('phone-error-text');
 
-  // 监听身份证号码输入事件（假设已有该事件）
-  const idNumberInput = document.getElementById('idNumber');
-  if (idNumberInput) {
-    idNumberInput.addEventListener('input', function() {
-      updateFieldsVisibility();
-    });
-  }
+      // 添加输入事件监听 - 限制只能输入数字
+      phoneInput.addEventListener('input', function(e) {
+        // 移除非数字字符
+        this.value = this.value.replace(/[^\d]/g, '');
 
-  // 更新字段可见性的函数
-  function updateFieldsVisibility() {
-    // 获取年龄和性别文本
-    const ageText = ageDisplay.textContent.trim();
-    const genderText = genderDisplay.textContent.trim();
+        // 实时验证长度
+        validatePhoneLength();
+      });
 
-    // 处理年龄为空或非数字的情况
-    if (ageText === '未填写身份证号码' || isNaN(parseInt(ageText))) {
-      hideSections(true); // 隐藏就业和收支信息
-      return;
-    }
+      // 添加按键按下事件监听 - 防止非数字字符输入
+      phoneInput.addEventListener('keydown', function(e) {
+        // 允许退格、删除、方向键等控制键
+        if (
+          e.key === 'Backspace' ||
+          e.key === 'Delete' ||
+          e.key === 'ArrowLeft' ||
+          e.key === 'ArrowRight' ||
+          e.key === 'Tab'
+        ) {
+          return;
+        }
 
-    // 转换年龄为数字
-    const age = parseInt(ageText);
+        // 只允许数字键
+        if (!/^\d$/.test(e.key)) {
+          e.preventDefault();
+        }
+      });
 
-    // 根据年龄和性别判断
-    const isMinor = age < 16;
-    const isRetiredMale = genderText === '男' && age > 65;
-    const isRetiredFemale = genderText === '女' && age > 65;
+      // 添加失焦事件监听 - 完整验证
+      phoneInput.addEventListener('blur', function() {
+        validatePhone();
+      });
 
-    if (isMinor || isRetiredMale || isRetiredFemale) {
-      // 隐藏就业信息
-      employmentSection.classList.add('hidden');
-
-      // 仅当年龄<16时隐藏收支信息
-      if (isMinor) {
-        incomeSection.classList.add('hidden');
-      } else {
-        incomeSection.classList.remove('hidden');
+      // 手机号长度验证
+      function validatePhoneLength() {
+        if (phoneInput.value.length > 12) {
+          phoneInput.value = phoneInput.value.substring(0, 12);
+        }
       }
-    } else {
-      // 显示所有信息
-      employmentSection.classList.remove('hidden');
-      incomeSection.classList.remove('hidden');
-    }
-  }
 
-  // 初始化处理
-  updateFieldsVisibility();
-});
+      // 手机号完整验证
+      function validatePhone() {
+        const value = phoneInput.value.trim();
+
+        // 清除之前的错误状态
+        phoneInput.classList.remove('border-red-500');
+        phoneError.classList.add('hidden');
+
+        // 如果为空，由required属性处理
+        if (value === '') {
+          return true;
+        }
+
+        // 验证长度
+        if (value.length > 12) {
+          phoneInput.classList.add('border-red-500');
+          phoneError.classList.remove('hidden');
+          phoneErrorText.textContent = '手机号码长度不能超过12位';
+          return false;
+        }
+
+        // 验证是否全为数字
+        if (!/^\d+$/.test(value)) {
+          phoneInput.classList.add('border-red-500');
+          phoneError.classList.remove('hidden');
+          phoneErrorText.textContent = '手机号码只能包含数字';
+          return false;
+        }
+
+        return true;
+      }
+
+
+
+
+
+
+        // 户主姓名验证
+        const householdNameInput = document.getElementById('householdName');
+        const householdNameError = document.getElementById('householdName-error');
+        const householdNameErrorText = document.getElementById('householdName-error-text');
+
+        householdNameInput.addEventListener('input', function() {
+            validateHouseholdName();
+        });
+
+        householdNameInput.addEventListener('blur', function() {
+            validateHouseholdName(true);
+        });
+
+        function validateHouseholdName(showError = false) {
+            const value = householdNameInput.value.trim();
+
+            householdNameInput.classList.remove('border-red-500');
+            householdNameError.classList.add('hidden');
+
+            if (value === '') return true;
+
+            const regex = /^[\u4e00-\u9fa5]+$/;
+
+            if (!regex.test(value)) {
+                if (showError) {
+                    householdNameInput.classList.add('border-red-500');
+                    householdNameError.classList.remove('hidden');
+                    householdNameErrorText.textContent = '户主姓名只能包含中文字符，不允许空格';
+                }
+                return false;
+            }
+
+            return true;
+        }
+
+
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+          // 获取关键元素
+          const ageDisplay = document.getElementById('ageDisplay');
+          const genderDisplay = document.getElementById('genderDisplay');
+          const employmentSection = document.querySelector('[data-section="employment"]');
+          const incomeSection = document.querySelector('[data-section="income"]');
+
+          // 定义隐藏函数
+          function hideSections(shouldHide) {
+            if (shouldHide) {
+              employmentSection.classList.add('hidden');
+              incomeSection.classList.add('hidden');
+            } else {
+              employmentSection.classList.remove('hidden');
+              incomeSection.classList.remove('hidden');
+            }
+          }
+
+          // 监听身份证号码输入事件（假设已有该事件）
+          const idNumberInput = document.getElementById('idNumber');
+          if (idNumberInput) {
+            idNumberInput.addEventListener('input', function() {
+              updateFieldsVisibility();
+            });
+          }
+
+          // 更新字段可见性的函数
+          function updateFieldsVisibility() {
+            // 获取年龄和性别文本
+            const ageText = ageDisplay.textContent.trim();
+            const genderText = genderDisplay.textContent.trim();
+
+            // 处理年龄为空或非数字的情况
+            if (ageText === '未填写身份证号码' || isNaN(parseInt(ageText))) {
+              hideSections(true); // 隐藏就业和收支信息
+              return;
+            }
+
+            // 转换年龄为数字
+            const age = parseInt(ageText);
+
+            // 根据年龄和性别判断
+            const isMinor = age < 16;
+            const isRetiredMale = genderText === '男' && age > 65;
+            const isRetiredFemale = genderText === '女' && age > 65;
+
+            if (isMinor || isRetiredMale || isRetiredFemale) {
+              // 隐藏就业信息
+              employmentSection.classList.add('hidden');
+
+              // 仅当年龄<16时隐藏收支信息
+              if (isMinor) {
+                incomeSection.classList.add('hidden');
+              } else {
+                incomeSection.classList.remove('hidden');
+              }
+            } else {
+              // 显示所有信息
+              employmentSection.classList.remove('hidden');
+              incomeSection.classList.remove('hidden');
+            }
+          }
+
+          // 初始化处理
+          updateFieldsVisibility();
+        });
 
 
 
@@ -1712,854 +2076,476 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
 
-
-
-
-
-
-  // ===== 户籍地址数据结构 =====
-  const registeredAddressData = [
-  {
-        "name": "碧洲镇",
-        "children": [
-            { "name": "安子前村" },
-            { "name": "白水村" },
-            { "name": "碧洲村" },
-            { "name": "碧洲居委会" },
-            { "name": "达泉村" },
-            { "name": "丰林村" },
-            { "name": "宏山村" },
-            { "name": "黄岗村" },
-            { "name": "栗头村" },
-            { "name": "良岗村" },
-            { "name": "珠湖村" },
-            { "name": "水兴居委会" }
+          // ---------------------
+    // 数据模型优化
+    // ---------------------
+    // 户籍地址数据模型(县镇村)
+    const householdAddressData = {
+      counties: [
+        { id: '1', name: '海淀区' },
+        { id: '2', name: '朝阳区' },
+        { id: '3', name: '昌平区' }
+      ],
+      towns: {
+        '1': [
+          { id: '101', name: '中关村街道' },
+          { id: '102', name: '海淀街道' },
+          { id: '103', name: '东升镇' }
+        ],
+        '2': [
+          { id: '201', name: '朝外街道' },
+          { id: '202', name: '三里屯街道' },
+          { id: '203', name: '劲松街道' }
+        ],
+        '3': [
+          { id: '301', name: '城北街道' },
+          { id: '302', name: '南口地区' },
+          { id: '303', name: '马池口地区' }
         ]
-    },
-    {
-        "name": "草林镇",
-        "children": [
-            { "name": "草林居委会" },
-            { "name": "草林村" },
-            { "name": "车源村" },
-            { "name": "大坪村" },
-            { "name": "峨岭村" },
-            { "name": "峨溪村" },
-            { "name": "蕃源村" },
-            { "name": "拱前村" },
-            { "name": "冠溪村" },
-            { "name": "楠木村" },
-            { "name": "唐虞村" },
-            { "name": "锡溪村" },
-            { "name": "溪下村" },
-            { "name": "悠富村" },
-            { "name": "源溪村" },
-            { "name": "新苑居委会" }
+      },
+      villages: {
+        '101': [
+          { id: '1001', name: '科源社区' },
+          { id: '1002', name: '航天社区' },
+          { id: '1003', name: '科春社区' }
+        ],
+        '102': [
+          { id: '1004', name: '海淀路社区' },
+          { id: '1005', name: '芙蓉里社区' },
+          { id: '1006', name: '麦钟桥社区' }
+        ],
+        '201': [
+          { id: '2001', name: '南营房社区' },
+          { id: '2002', name: '工体西路社区' },
+          { id: '2003', name: '吉庆里社区' }
         ]
-    },
-    {
-        "name": "城市社区管委会",
-        "children": [
-            { "name": "八角楼社区" },
-            { "name": "北门社区" },
-            { "name": "茶都社区" },
-            { "name": "城东社区" },
-            { "name": "东路社区" },
-            { "name": "龙泉社区" },
-            { "name": "商贸城社区" },
-            { "name": "水南社区" },
-            { "name": "四里街社区" },
-            { "name": "四厢街社区" },
-            { "name": "遂兴社区" },
-            { "name": "文献社区" },
-            { "name": "银云社区" }
-        ]
-    },
-    {
-        "name": "大汾镇",
-        "children": [
-            { "name": "草汾村" },
-            { "name": "滁峰村" },
-            { "name": "滁洲村" },
-            { "name": "大汾村" },
-            { "name": "高兴村" },
-            { "name": "和坪村" },
-            { "name": "红太阳社区" },
-            { "name": "江夏村" },
-            { "name": "乐天村" },
-            { "name": "鹿坑村" },
-            { "name": "螺汾村" },
-            { "name": "洛阳村" },
-            { "name": "山田村" },
-            { "name": "上坳村" },
-            { "name": "石花村" },
-            { "name": "石门岭村" },
-            { "name": "石狮村" },
-            { "name": "双嵊村" },
-            { "name": "桃坪村" },
-            { "name": "文溪村" },
-            { "name": "寨南村" },
-            { "name": "寨溪村" },
-            { "name": "竹坑村" },
-            { "name": "庄坑村" },
-            { "name": "永安社区" },
-            { "name": "永盛居委会" }
-        ]
-    },
-    {
-        "name": "大坑乡",
-        "children": [
-            { "name": "板坑村" },
-            { "name": "赤坑村" },
-            { "name": "大坑村" },
-            { "name": "大洲村" },
-            { "name": "高倚村" },
-            { "name": "禾溪村" },
-            { "name": "黄坑村" },
-            { "name": "九田村" },
-            { "name": "林溪村" },
-            { "name": "灵潭村" },
-            { "name": "罗坊村" },
-            { "name": "园州村" },
-            { "name": "长隆村" },
-            { "name": "尚美居委会" },
-            { "name": "尚文居委会" },
-            { "name": "下长龙村" }
-        ]
-    },
-    {
-        "name": "戴家埔乡",
-        "children": [
-            { "name": "川桃村" },
-            { "name": "大洞村" },
-            { "name": "戴家埔村" },
-            { "name": "福龙村" },
-            { "name": "立新村" },
-            { "name": "淋洋村" },
-            { "name": "七岭村" },
-            { "name": "阡陌村" },
-            { "name": "清秀村" },
-            { "name": "双桥岭村" },
-            { "name": "水东居委会" },
-            { "name": "戴圣居委会" }
-        ]
-    },
-    {
-        "name": "堆子前镇",
-        "children": [
-            { "name": "陂田村" },
-            { "name": "卜侯村" },
-            { "name": "堆前村" },
-            { "name": "河籁村" },
-            { "name": "久渡村" },
-            { "name": "堆子前居委会" },
-            { "name": "蒲芦村" },
-            { "name": "七坪村" },
-            { "name": "鄢背村" }
-        ]
-    },
-    {
-        "name": "高坪镇",
-        "children": [
-            { "name": "车下村" },
-            { "name": "高坪村" },
-            { "name": "禾坪村" },
-            { "name": "卷旋村" },
-            { "name": "茅坪村" },
-            { "name": "明坑村" },
-            { "name": "青草村" },
-            { "name": "源水口村" },
-            { "name": "桃洞村" },
-            { "name": "兴坪居委会" },
-            { "name": "中村村" }
-        ]
-    },
-    {
-        "name": "禾源镇",
-        "children": [
-            { "name": "洞溪村" },
-            { "name": "富溪村" },
-            { "name": "谷团村" },
-            { "name": "禾源村" },
-            { "name": "禾源居委会" },
-            { "name": "黄背村" },
-            { "name": "三溪村" },
-            { "name": "山坳村" },
-            { "name": "小黄坑村" },
-            { "name": "严塘村" },
-            { "name": "杂口村" }
-        ]
-    },
-    {
-        "name": "黄坑乡",
-        "children": [
-            { "name": "太坪村" },
-            { "name": "大沙村" },
-            { "name": "古洲村" },
-            { "name": "黄塖村" },
-            { "name": "黄果村" },
-            { "name": "黄坑圩" },
-            { "name": "黄溪村" },
-            { "name": "金河村" },
-            { "name": "金田村" },
-            { "name": "昆岗村" },
-            { "name": "龙口村" },
-            { "name": "三坑村" },
-            { "name": "水口村" },
-            { "name": "园潭村" },
-            { "name": "周园村" }
-        ]
-    },
-    {
-        "name": "巾石乡",
-        "children": [
-            { "name": "东坑村" },
-            { "name": "界溪村" },
-            { "name": "巾安居委会" },
-            { "name": "巾石村" },
-            { "name": "龙山村" },
-            { "name": "罗文村" },
-            { "name": "南安村" },
-            { "name": "丘坊村" },
-            { "name": "沙田村" },
-            { "name": "汤村村" },
-            { "name": "下湾村" },
-            { "name": "新安村" },
-            { "name": "银村村" },
-            { "name": "竹坪村" }
-        ]
-    },
-    {
-        "name": "枚江镇",
-        "children": [
-            { "name": "定口村" },
-            { "name": "东江村" },
-            { "name": "高垅村" },
-            { "name": "高升村" },
-            { "name": "豪溪村" },
-            { "name": "江美居委会" },
-            { "name": "莲溪村" },
-            { "name": "枚溪村" },
-            { "name": "钱塘村" },
-            { "name": "邵溪村" },
-            { "name": "舍上村" },
-            { "name": "石牌村" },
-            { "name": "下湖村" },
-            { "name": "瑶溪村" },
-            { "name": "圆岭村" },
-            { "name": "云岭居委会" },
-            { "name": "张塘村" },
-            { "name": "中团村" }
-        ]
-    },
-    {
-        "name": "南江乡",
-        "children": [
-            { "name": "南洞村" },
-            { "name": "南江村" },
-            { "name": "沙美村" },
-            { "name": "石鼓村" },
-            { "name": "圩镇居委会" },
-            { "name": "樟溪村" },
-            { "name": "中顺村" }
-        ]
-    },
-    {
-        "name": "泉江镇",
-        "children": [
-            { "name": "安下村" },
-            { "name": "卜村村" },
-            { "name": "窗溪村" },
-            { "name": "大桥村" },
-            { "name": "大屋村" },
-            { "name": "东皋村" },
-            { "name": "东门村" },
-            { "name": "高源村" },
-            { "name": "共同村" },
-            { "name": "共裕村" },
-            { "name": "黄练村" },
-            { "name": "集合村" },
-            { "name": "坑口村" },
-            { "name": "里口村" },
-            { "name": "良头村" },
-            { "name": "龙上村" },
-            { "name": "螺溪村" },
-            { "name": "木冈村" },
-            { "name": "盆珠村" },
-            { "name": "上坑村" },
-            { "name": "上溪村" },
-            { "name": "四农村" },
-            { "name": "太盆村" },
-            { "name": "桃园村" },
-            { "name": "五里村" },
-            { "name": "西庄村" },
-            { "name": "下坑村" },
-            { "name": "小溪村" },
-            { "name": "谐田村" },
-            { "name": "新林村" },
-            { "name": "新溪村" },
-            { "name": "新寨村" },
-            { "name": "洋村村" },
-            { "name": "银山村" },
-            { "name": "渔业村" },
-            { "name": "云岗村" },
-            { "name": "泽江村" },
-            { "name": "洲上村" }
-        ]
-    },
-    {
-        "name": "双桥乡",
-        "children": [
-            { "name": "东垓村" },
-            { "name": "马埠村" },
-            { "name": "双桥村" },
-            { "name": "双溪村" },
-            { "name": "潭溪村" },
-            { "name": "湾洲村" }
-        ]
-    },
-    {
-        "name": "汤湖镇",
-        "children": [
-            { "name": "白土村" },
-            { "name": "玕山村" },
-            { "name": "高塘村" },
-            { "name": "横圳村" },
-            { "name": "良洞村" },
-            { "name": "南屏村" },
-            { "name": "平溪村" },
-            { "name": "青茶村" },
-            { "name": "汤湖村" },
-            { "name": "围溪村" },
-            { "name": "小坑村" },
-            { "name": "新茗居委会" },
-            { "name": "油湖村" }
-        ]
-    },
-    {
-        "name": "五斗江乡",
-        "children": [
-            { "name": "车坳村" },
-            { "name": "丰禄村" },
-            { "name": "红军桥居委会" },
-            { "name": "联桥村" },
-            { "name": "米石村" },
-            { "name": "木洞村" },
-            { "name": "南坑村" },
-            { "name": "三和村" },
-            { "name": "五斗江村" },
-            { "name": "庄坑口村" }
-        ]
-    },
-    {
-        "name": "西溪乡",
-        "children": [
-            { "name": "横昌村" },
-            { "name": "黄源村" },
-            { "name": "奖连村" },
-            { "name": "廖坊村" },
-            { "name": "千秋村" },
-            { "name": "圩镇居委会" },
-            { "name": "文坳村" },
-            { "name": "西溪村" },
-            { "name": "长源村" }
-        ]
-    },
-    {
-        "name": "新江乡",
-        "children": [
-            { "name": "大旺村" },
-            { "name": "大庄村" },
-            { "name": "范背村" },
-            { "name": "富民村" },
-            { "name": "和溪村" },
-            { "name": "横石村" },
-            { "name": "金溪村" },
-            { "name": "三联村" },
-            { "name": "石坑村" },
-            { "name": "小湖村" },
-            { "name": "新成居委会" },
-            { "name": "新江村" }
-        ]
-    },
-    {
-        "name": "衙前镇",
-        "children": [
-            { "name": "塅尾村" },
-            { "name": "金田居委会" },
-            { "name": "上芫村" },
-            { "name": "石盘村" },
-            { "name": "士高村" },
-            { "name": "双镜村" },
-            { "name": "溪口村" },
-            { "name": "衙前村" }
-        ]
-    },
-    {
-        "name": "营盘圩乡",
-        "children": [
-            { "name": "大夏村" },
-            { "name": "禾坑村" },
-            { "name": "梅竹村" },
-            { "name": "桥头村" },
-            { "name": "桐古村" },
-            { "name": "小夏村" },
-            { "name": "秀峰居委会" },
-            { "name": "营盘村" }
-        ]
-    },
-    {
-        "name": "雩田镇",
-        "children": [
-            { "name": "城溪村" },
-            { "name": "村口村" },
-            { "name": "大饶村" },
-            { "name": "坊坑村" },
-            { "name": "皋村村" },
-            { "name": "横岭村" },
-            { "name": "加庄村" },
-            { "name": "江背村" },
-            { "name": "龙脑村" },
-            { "name": "龙团村" },
-            { "name": "龙溪村" },
-            { "name": "茂园村" },
-            { "name": "盘溪村" },
-            { "name": "彭汾村" },
-            { "name": "任溪村" },
-            { "name": "珊田村" },
-            { "name": "石下村" },
-            { "name": "堂境村" },
-            { "name": "塘背村" },
-            { "name": "田心村" },
-            { "name": "下塘村" },
-            { "name": "夏溪村" },
-            { "name": "新泽村" },
-            { "name": "沿溪村" },
-            { "name": "雁林村" },
-            { "name": "雩田村" },
-            { "name": "雩田居委会" },
-            { "name": "长盛村" },
-            { "name": "中洲村" }
-        ]
-    },
-    {
-        "name": "珠田镇",
-        "children": [
-            { "name": "达溪村" },
-            { "name": "大垅村" },
-            { "name": "黄塘村" },
-            { "name": "良洲村" },
-            { "name": "岭上村" },
-            { "name": "明珠居委会" },
-            { "name": "南村村" },
-            { "name": "仙溪村" },
-            { "name": "洋湖村" },
-            { "name": "珠田村" },
-            { "name": "珠溪村" }
-        ]
-    },
-    {
-        "name": "左安镇",
-        "children": [
-            { "name": "安全村" },
-            { "name": "安溪村" },
-            { "name": "白云村" },
-            { "name": "冲溪村" },
-            { "name": "东光村" },
-            { "name": "丰城村" },
-            { "name": "瓜塘村" },
-            { "name": "观音桥居委会" },
-            { "name": "鹤坑村" },
-            { "name": "横岗村" },
-            { "name": "红裕村" },
-            { "name": "黄金村" },
-            { "name": "圩镇居委会" },
-            { "name": "连河村" },
-            { "name": "莲塘村" },
-            { "name": "龙颈村" },
-            { "name": "曲溪村" },
-            { "name": "石窝村" },
-            { "name": "桃源村" },
-            { "name": "梯岭村" },
-            { "name": "望月村" },
-            { "name": "下园村" },
-            { "name": "扬芬村" },
-            { "name": "洋溪村" },
-            { "name": "圆溪村" },
-            { "name": "樟木村" }
-            ]
-        }
-    ];
-
-  // ===== 常住/就业地址数据结构 =====
-  const sharedAddressData = [
-      {
-          "name": "江西省",
-          "code": "江西省",
-          "children": [
-              {
-                  "name": "南昌市",
-                  "code": "南昌市",
-                  "children": [
-                      {
-                          "name": "东湖区",
-                          "code": "南昌市-东湖区",
-                          "children": [
-                              {
-                                  "name": "滕王阁街道",
-                                  "code": "南昌市-东湖区-滕王阁街道",
-                                  "children": [
-                                      { "name": "滕王阁社区", "code": "南昌市-东湖区-滕王阁街道-滕王阁社区" },
-                                      // 其他子项...
-                                  ]
-                              }
-                          ]
-                      }
-                  ]
-              }
-          ]
       }
-  ];
+    };
 
-  // ===== 户籍地址选择器 =====
-  (function() {
-      // DOM元素
-      const selector = document.getElementById('address-selector');
-      const dropdown = document.getElementById('address-dropdown');
-      const content = document.getElementById('dropdown-content');
-      const selectedText = document.getElementById('selected-address');
-      const arrowIcon = document.getElementById('selector-arrow');
-      const inputField = document.getElementById('registeredAddress');
-
-      // 当前选中的各级地址
-      let selectedTown = null;
-      let selectedVillage = null;
-
-      // 初始化
-      function init() {
-          resetSelector();
-          renderTowns(registeredAddressData);
-
-          // 事件监听
-          selector.addEventListener('click', (e) => {
-              e.stopPropagation();
-              toggleDropdown();
-          });
-
-          document.addEventListener('click', () => {
-              toggleDropdown(false);
-          });
+    // 城市地址数据模型(省市区)，居住地址和就业地址共用此数据
+    const cityAddressData = {
+      provinces: [
+        { id: '100', name: '北京市' },
+        { id: '101', name: '上海市' },
+        { id: '102', name: '广东省' }
+      ],
+      cities: {
+        '100': [
+          { id: '10001', name: '北京市' }
+        ],
+        '101': [
+          { id: '10101', name: '上海市' }
+        ],
+        '102': [
+          { id: '10201', name: '广州市' },
+          { id: '10202', name: '深圳市' },
+          { id: '10203', name: '珠海市' }
+        ]
+      },
+      districts: {
+        '10001': [
+          { id: '100001', name: '东城区' },
+          { id: '100002', name: '西城区' },
+          { id: '100003', name: '朝阳区' }
+        ],
+        '10101': [
+          { id: '101001', name: '黄浦区' },
+          { id: '101002', name: '徐汇区' },
+          { id: '101003', name: '长宁区' }
+        ],
+        '10201': [
+          { id: '102001', name: '天河区' },
+          { id: '102002', name: '越秀区' },
+          { id: '102003', name: '海珠区' }
+        ]
       }
+    };
 
-      function resetSelector() {
-          selectedTown = null;
-          selectedVillage = null;
-          selectedText.textContent = '请选择户籍地址';
-          inputField.value = '';
-          dropdown.classList.add('hidden');
-          arrowIcon.classList.remove('rotate-180');
-          content.innerHTML = '';
-      }
+    // ---------------------
+    // 核心功能函数优化
+    // ---------------------
+    /**
+     * 初始化三级地址选择器(县镇村)
+     * @param {string} countySelectId 县级选择器ID
+     * @param {string} townSelectId 镇级选择器ID
+     * @param {string} villageSelectId 村级选择器ID
+     * @param {object} data 地址数据对象
+     */
+    function initThreeLevelAddressSelector(
+      countySelectId, townSelectId, villageSelectId,
+      data
+    ) {
+      const countySelect = document.getElementById(countySelectId);
+      const townSelect = document.getElementById(townSelectId);
+      const villageSelect = document.getElementById(villageSelectId);
 
-      function renderTowns(towns) {
-          resetSelector();
-
-          towns.forEach(town => {
-              const townItem = createAddressItem(town, 'town', () => {
-                  selectedTown = town;
-                  renderVillages(town.children);
-              });
-              content.appendChild(townItem);
-          });
-      }
-
-      function renderVillages(villages) {
-          content.innerHTML = '';
-
-          // 添加返回按钮
-          addBackButton(() => {
-              selectedTown = null;
-              renderTowns(registeredAddressData);
-          });
-
-          // 添加当前路径
-          addLocationHeader(selectedTown.name);
-
-          villages.forEach(village => {
-              const villageItem = createAddressItem(village, 'village', () => {
-                  selectedVillage = village;
-                  completeSelection();
-              });
-              content.appendChild(villageItem);
-          });
-      }
-
-      function createAddressItem(data, level, onClick) {
-          const item = document.createElement('div');
-          item.className = 'px-4 py-2.5 hover:bg-gray-100 rounded-lg cursor-pointer ml-2 transition-all duration-200 flex items-center';
-
-          if (level === 'town' && data.children?.length > 0) {
-              item.innerHTML = `
-                  <span>${data.name}</span>
-                  <i class="fa fa-chevron-right text-gray-400 text-xs ml-auto"></i>
-              `;
-          } else {
-              item.textContent = data.name;
-          }
-
-          item.addEventListener('click', (e) => {
-              onClick();
-              e.stopPropagation();
-          });
-
-          return item;
-      }
-
-      function addBackButton(onClick) {
-          const backButton = document.createElement('div');
-          backButton.className = 'px-4 py-2 hover:bg-gray-100 rounded-lg cursor-pointer text-sm text-gray-500 mb-2 flex items-center transition-all duration-200';
-          backButton.innerHTML = '<i class="fa fa-arrow-left mr-2"></i> 返回上一级';
-          backButton.addEventListener('click', (e) => {
-              onClick();
-              e.stopPropagation();
-          });
-          content.appendChild(backButton);
-      }
-
-      function addLocationHeader(townName) {
-          const title = document.createElement('div');
-          title.className = 'px-4 py-1.5 text-xs font-semibold text-gray-500 bg-gray-50 rounded-lg mb-1.5';
-          title.textContent = `当前选择：${townName}`;
-          content.appendChild(title);
-      }
-
-      function completeSelection() {
-          if (!selectedTown || !selectedVillage) return;
-
-          const fullAddress = `${selectedTown.name} ${selectedVillage.name}`;
-          selectedText.textContent = fullAddress;
-          inputField.value = `${selectedTown.name}-${selectedVillage.name}`;
-
-          toggleDropdown(false);
-          selector.classList.add('border-green-500');
-          setTimeout(() => selector.classList.remove('border-green-500'), 1000);
-      }
-
-      function toggleDropdown(show = undefined) {
-          if (show === undefined) {
-              dropdown.classList.toggle('hidden');
-              arrowIcon.classList.toggle('rotate-180');
-          } else {
-              dropdown.classList[show ? 'remove' : 'add']('hidden');
-              arrowIcon.classList[show ? 'add' : 'remove']('rotate-180');
-          }
-      }
-
-      // 立即执行初始化
-      init();
-  })();
-
-  // ===== 常住/就业地址选择器（共用逻辑） =====
-  (function() {
-      // 层级配置
-      const levelConfig = [
-          { level: 'province', label: '省' },
-          { level: 'city', label: '市' },
-          { level: 'district', label: '区' },
-          { level: 'town', label: '街道' },
-          { level: 'village', label: '社区' }
-      ];
-
-      // 初始化所有共用地址选择器
-      document.addEventListener('DOMContentLoaded', () => {
-          const containers = document.querySelectorAll('[data-shared-address-selector]');
-          containers.forEach(container => {
-              initSharedAddressSelector(container);
-          });
+      // 初始化县级选项
+      data.counties.forEach(county => {
+        const option = document.createElement('option');
+        option.value = county.id;
+        option.textContent = county.name;
+        countySelect.appendChild(option);
       });
 
-      function initSharedAddressSelector(container) {
-          const selectorId = container.getAttribute('data-selector-id');
-          const selector = document.getElementById(`${selectorId}-selector`);
-          const dropdown = document.getElementById(`${selectorId}-dropdown`);
-          const content = document.getElementById(`${selectorId}-content`);
-          const selectedText = document.getElementById(`${selectorId}-selected`);
-          const arrowIcon = document.getElementById(`${selectorId}-arrow`);
-          const inputField = document.getElementById(`${selectorId}`);
+      // 县级选择变化事件 - 新增同步逻辑
+      countySelect.addEventListener('change', function() {
+        const selectedId = this.value;
+        updateDependentSelector(townSelect, villageSelect, data.towns, selectedId, '请先选择县');
+        updateAddressSync('household'); // 新增：更新地址同步
+      });
 
-          // 每个选择器独立的状态
-          const state = {
-              selectedLevels: {
-                  province: null,
-                  city: null,
-                  district: null,
-                  town: null,
-                  village: null
-              },
-              container,
-              selector,
-              dropdown,
-              content,
-              selectedText,
-              arrowIcon,
-              inputField
-          };
+      // 镇级选择变化事件 - 新增同步逻辑
+      townSelect.addEventListener('change', function() {
+        const selectedId = this.value;
+        updateDependentSelector(villageSelect, null, data.villages, selectedId, '请先选择镇');
+        updateAddressSync('household'); // 新增：更新地址同步
+      });
 
-          function resetSelector() {
-              state.selectedLevels = {
-                  province: null,
-                  city: null,
-                  district: null,
-                  town: null,
-                  village: null
-              };
+      // 村级选择变化事件 - 新增同步逻辑
+      villageSelect.addEventListener('change', function() {
+        updateAddressSync('household'); // 新增：更新地址同步
+      });
+    }
 
-              clearContent();
-              state.selectedText.textContent = '请选择省/市/区/街道/社区';
-              state.inputField.value = '';
+    /**
+     * 初始化城市地址选择器(省市区)
+     * @param {string} provinceSelectId 省级选择器ID
+     * @param {string} citySelectId 市级选择器ID
+     * @param {string} districtSelectId 区级选择器ID
+     * @param {object} data 地址数据对象
+     * @param {string} sameCheckboxId 同步复选框ID
+     * @param {string} textDivId 文本显示区域ID
+     * @param {string} fieldsDivId 选择器区域ID
+     * @param {string} inputId 文本输入框ID
+     * @param {string} syncFromId 同步源ID(可选)
+     */
+    function initCityAddressSelector(
+      provinceSelectId, citySelectId, districtSelectId,
+      data, sameCheckboxId, textDivId, fieldsDivId, inputId,
+      syncFromId = null
+    ) {
+      const provinceSelect = document.getElementById(provinceSelectId);
+      const citySelect = document.getElementById(citySelectId);
+      const districtSelect = document.getElementById(districtSelectId);
+      const sameCheckbox = document.getElementById(sameCheckboxId);
+      const textDiv = document.getElementById(textDivId);
+      const fieldsDiv = document.getElementById(fieldsDivId);
+      const input = document.getElementById(inputId);
+      const syncFromElement = syncFromId ? document.getElementById(syncFromId) : null;
 
-              renderLevelItems(sharedAddressData, 'province', null);
+      // 初始化省级选项
+      data.provinces.forEach(province => {
+        const option = document.createElement('option');
+        option.value = province.id;
+        option.textContent = province.name;
+        provinceSelect.appendChild(option);
+      });
+
+      // 省级选择变化事件 - 新增同步逻辑
+      provinceSelect.addEventListener('change', function() {
+        const selectedId = this.value;
+        updateCityDistrictSelector(citySelect, districtSelect, data.cities, data.districts, selectedId, '请先选择省份', '请先选择城市');
+        updateAddressSync(provinceSelectId.includes('residence') ? 'residence' : 'work'); // 新增：更新地址同步
+      });
+
+      // 市级选择变化事件 - 新增同步逻辑
+      citySelect.addEventListener('change', function() {
+        const selectedId = this.value;
+        updateCityDistrictSelector(districtSelect, null, null, data.districts, selectedId, '请先选择城市');
+        updateAddressSync(provinceSelectId.includes('residence') ? 'residence' : 'work'); // 新增：更新地址同步
+      });
+
+      // 区级选择变化事件 - 新增同步逻辑
+      districtSelect.addEventListener('change', function() {
+        updateAddressSync(provinceSelectId.includes('residence') ? 'residence' : 'work'); // 新增：更新地址同步
+      });
+
+      // 同步复选框变化事件
+      sameCheckbox.addEventListener('change', function() {
+        if (this.checked) {
+          // 重置选择器
+          provinceSelect.value = '';
+          citySelect.value = '';
+          districtSelect.value = '';
+
+          // 切换显示状态
+          fieldsDiv.classList.add('hidden');
+          textDiv.classList.remove('hidden');
+          provinceSelect.disabled = true;
+          citySelect.disabled = true;
+          districtSelect.disabled = true;
+
+          // 更新同步地址
+          updateSyncedAddress(input, syncFromElement);
+        } else {
+          // 切换显示状态
+          fieldsDiv.classList.remove('hidden');
+          textDiv.classList.add('hidden');
+          provinceSelect.disabled = false;
+
+          // 更新下级选择器状态
+          const hasProvince = provinceSelect.value !== '';
+          citySelect.disabled = !hasProvince;
+
+          const hasCity = citySelect.value !== '';
+          districtSelect.disabled = !hasCity;
+        }
+
+        // 更新相关同步状态
+        if (sameCheckboxId === 'sameAsHousehold') {
+          updateAddressSyncState('residence');
+        }
+      });
+
+      // 监听同步源变化
+      if (syncFromElement) {
+        syncFromElement.addEventListener('change', function() {
+          if (sameCheckbox.checked) {
+            updateSyncedAddress(input, syncFromElement);
           }
-
-          function clearContent() {
-              state.content.innerHTML = '';
-          }
-
-          function renderLevelItems(items, currentLevel, parentLevel) {
-              clearContent();
-
-              if (parentLevel) {
-                  addBackButton(state, () => {
-                      const levelIndex = levelConfig.findIndex(l => l.level === currentLevel);
-                      const prevLevel = levelConfig[levelIndex - 1].level;
-
-                      if (prevLevel === 'province') {
-                          renderLevelItems(sharedAddressData, prevLevel, null);
-                      } else {
-                          const grandParentLevel = levelConfig[levelIndex - 2].level;
-                          renderLevelItems(state.selectedLevels[grandParentLevel].children, prevLevel, grandParentLevel);
-                      }
-
-                      state.selectedLevels[currentLevel] = null;
-                  });
-              }
-
-              addLocationHeader(state, buildLocationPath(state, currentLevel));
-
-              items.forEach(item => {
-                  const itemElement = createAddressItem(state, item, currentLevel, () => {
-                      state.selectedLevels[currentLevel] = item;
-
-                      if (item.children && item.children.length > 0) {
-                          const nextLevelIndex = levelConfig.findIndex(l => l.level === currentLevel) + 1;
-                          if (nextLevelIndex < levelConfig.length) {
-                              const nextLevel = levelConfig[nextLevelIndex].level;
-                              renderLevelItems(item.children, nextLevel, currentLevel);
-                          }
-                      } else {
-                          completeSelection(state);
-                      }
-                  });
-
-                  state.content.appendChild(itemElement);
-              });
-          }
-
-          function createAddressItem(state, data, level, onClick) {
-              const item = document.createElement('div');
-              item.className = 'px-4 py-2.5 hover:bg-gray-100 rounded-lg cursor-pointer ml-2 transition-all duration-200 flex items-center';
-
-              if (data.children && data.children.length > 0) {
-                  item.innerHTML = `
-                      <span>${data.name}</span>
-                      <i class="fa fa-chevron-right text-gray-400 text-xs ml-auto"></i>
-                  `;
-              } else {
-                  item.textContent = data.name;
-              }
-
-              item.addEventListener('click', (e) => {
-                  onClick();
-                  e.stopPropagation();
-              });
-
-              return item;
-          }
-
-          function addBackButton(state, onClick) {
-              const backButton = document.createElement('div');
-              backButton.className = 'px-4 py-2 hover:bg-gray-100 rounded-lg cursor-pointer text-sm text-gray-500 mb-2 flex items-center transition-all duration-200';
-              backButton.innerHTML = '<i class="fa fa-arrow-left mr-2"></i> 返回上一级';
-              backButton.addEventListener('click', (e) => {
-                  onClick();
-                  e.stopPropagation();
-              });
-              state.content.appendChild(backButton);
-          }
-
-          function addLocationHeader(state, text) {
-              const title = document.createElement('div');
-              title.className = 'px-4 py-1.5 text-xs font-semibold text-gray-500 bg-gray-50 rounded-lg mb-1.5';
-              title.textContent = text;
-              state.content.appendChild(title);
-          }
-
-          function buildLocationPath(state, currentLevel) {
-              let path = '';
-              const levelIndex = levelConfig.findIndex(l => l.level === currentLevel);
-
-              for (let i = 0; i <= levelIndex; i++) {
-                  const level = levelConfig[i].level;
-                  if (state.selectedLevels[level]) {
-                      path += (path ? '/' : '') + state.selectedLevels[level].name;
-                  }
-              }
-
-              return path || '请选择';
-          }
-
-          function completeSelection(state) {
-              const fullAddress = Object.values(state.selectedLevels)
-                  .filter(level => level)
-                  .map(level => level.name)
-                  .join('/');
-
-              state.selectedText.textContent = fullAddress;
-              state.inputField.value = state.selectedLevels.village?.code || '';
-
-              toggleDropdown(state, false);
-
-              state.selector.classList.add('border-green-500');
-              setTimeout(() => {
-                  state.selector.classList.remove('border-green-500');
-              }, 1000);
-          }
-
-          function toggleDropdown(state, show) {
-              if (show === undefined) {
-                  state.dropdown.classList.toggle('hidden');
-                  state.arrowIcon.classList.toggle('rotate-180');
-              } else {
-                  state.dropdown.classList[show ? 'remove' : 'add']('hidden');
-                  state.arrowIcon.classList[show ? 'add' : 'remove']('rotate-180');
-              }
-          }
-
-          selector.addEventListener('click', (e) => {
-              e.stopPropagation();
-              toggleDropdown(state);
-          });
-
-          document.addEventListener('click', () => {
-              toggleDropdown(state, false);
-          });
-
-          resetSelector();
+        });
       }
-  })();
+    }
 
+    /**
+     * 更新依赖选择器
+     * @param {object} mainSelect 主要选择器元素
+     * @param {object} nextSelect 下一级选择器元素(可选)
+     * @param {object} dataMap 数据映射对象
+     * @param {string} parentId 父级ID
+     * @param {string} placeholder 占位文本
+     */
+    function updateDependentSelector(mainSelect, nextSelect, dataMap, parentId, placeholder) {
+      mainSelect.innerHTML = `<option value="">${placeholder}</option>`;
 
+      if (nextSelect) nextSelect.disabled = true;
 
+      if (parentId) {
+        mainSelect.disabled = false;
+        const options = dataMap[parentId] || [];
+
+        options.forEach(item => {
+          const option = document.createElement('option');
+          option.value = item.id;
+          option.textContent = item.name;
+          mainSelect.appendChild(option);
+        });
+
+        if (nextSelect) {
+          nextSelect.innerHTML = `<option value="">请先选择${mainSelect.id.includes('City') ? '城市' : '镇'}</option>`;
+          nextSelect.disabled = true;
+        }
+      } else {
+        mainSelect.disabled = true;
+        if (nextSelect) nextSelect.disabled = true;
+      }
+    }
+
+    /**
+     * 更新城市/区选择器
+     * @param {object} mainSelect 主要选择器元素
+     * @param {object} nextSelect 下一级选择器元素(可选)
+     * @param {object} cityDataMap 城市数据映射
+     * @param {object} districtDataMap 区域数据映射
+     * @param {string} parentId 父级ID
+     * @param {string} mainPlaceholder 主要选择器占位文本
+     * @param {string} nextPlaceholder 下一级选择器占位文本(可选)
+     */
+    function updateCityDistrictSelector(mainSelect, nextSelect, cityDataMap, districtDataMap, parentId, mainPlaceholder, nextPlaceholder = '') {
+      mainSelect.innerHTML = `<option value="">${mainPlaceholder}</option>`;
+
+      if (nextSelect) nextSelect.innerHTML = nextPlaceholder ? `<option value="">${nextPlaceholder}</option>` : '';
+
+      if (parentId) {
+        mainSelect.disabled = false;
+        const options = cityDataMap ? cityDataMap[parentId] || [] : districtDataMap[parentId] || [];
+
+        options.forEach(item => {
+          const option = document.createElement('option');
+          option.value = item.id;
+          option.textContent = item.name;
+          mainSelect.appendChild(option);
+        });
+
+        if (nextSelect) {
+          nextSelect.innerHTML = `<option value="">请先选择${mainSelect.id.includes('City') ? '城市' : '区'}</option>`;
+          nextSelect.disabled = true;
+        }
+      } else {
+        mainSelect.disabled = true;
+        if (nextSelect) nextSelect.disabled = true;
+      }
+    }
+
+    /**
+     * 更新同步地址文本
+     * @param {object} input 输入框元素
+     * @param {object} syncFrom 同步源元素
+     */
+    function updateSyncedAddress(input, syncFrom) {
+      if (!syncFrom) return;
+
+      let addressText = '';
+
+      // 判断同步源类型
+      if (syncFrom.id.includes('household')) {
+        // 同步户籍地址
+        const county = document.getElementById('householdCounty');
+        const town = document.getElementById('householdTown');
+        const village = document.getElementById('householdVillage');
+
+        if (county.value) addressText += county.options[county.selectedIndex].text;
+        if (town.value) addressText += ` ${town.options[town.selectedIndex].text}`;
+        if (village.value) addressText += ` ${village.options[village.selectedIndex].text}`;
+      } else {
+        // 同步居住地址
+        const province = document.getElementById('residenceProvince');
+        const city = document.getElementById('residenceCity');
+        const district = document.getElementById('residenceDistrict');
+
+        // 优先使用居住地址选择器的值
+        if (province.value || city.value || district.value) {
+          if (province.value) addressText += province.options[province.selectedIndex].text;
+          if (city.value) addressText += ` ${city.options[city.selectedIndex].text}`;
+          if (district.value) addressText += ` ${district.options[district.selectedIndex].text}`;
+        } else {
+          // 居住地址未选择时使用户籍地址
+          const county = document.getElementById('householdCounty');
+          const town = document.getElementById('householdTown');
+          const village = document.getElementById('householdVillage');
+
+          if (county.value) addressText += county.options[county.selectedIndex].text;
+          if (town.value) addressText += ` ${town.options[town.selectedIndex].text}`;
+          if (village.value) addressText += ` ${village.options[village.selectedIndex].text}`;
+        }
+      }
+
+      input.value = addressText || '地址将自动同步';
+    }
+
+    /**
+     * 检查地址是否有效
+     * @param {string} addressType 地址类型(household/residence/work)
+     * @returns {boolean} 地址是否有效
+     */
+    function isAddressValid(addressType) {
+      if (addressType === 'household') {
+        const county = document.getElementById('householdCounty');
+        const town = document.getElementById('householdTown');
+        const village = document.getElementById('householdVillage');
+        return county.value && town.value && village.value;
+      }
+
+      if (addressType === 'residence') {
+        const sameAsHousehold = document.getElementById('sameAsHousehold');
+        if (sameAsHousehold.checked) {
+          return isAddressValid('household');
+        } else {
+          const province = document.getElementById('residenceProvince');
+          const city = document.getElementById('residenceCity');
+          const district = document.getElementById('residenceDistrict');
+          return province.value && city.value && district.value;
+        }
+      }
+
+      if (addressType === 'work') {
+        const sameAsResidence = document.getElementById('sameAsResidence');
+        if (sameAsResidence.checked) {
+          return isAddressValid('residence');
+        } else {
+          const province = document.getElementById('workProvince');
+          const city = document.getElementById('workCity');
+          const district = document.getElementById('workDistrict');
+          return province.value && city.value && district.value;
+        }
+      }
+
+      return false;
+    }
+
+    /**
+     * 更新地址同步状态
+     * @param {string} addressType 地址类型(household/residence/work)
+     */
+    function updateAddressSyncState(addressType) {
+      if (addressType === 'household') {
+        // 更新同户籍地址复选框状态
+        const checkbox = document.getElementById('sameAsHousehold');
+        checkbox.disabled = !isAddressValid('household');
+      } else if (addressType === 'residence') {
+        // 更新同居住地址复选框状态
+        const checkbox = document.getElementById('sameAsResidence');
+        checkbox.disabled = !isAddressValid('residence');
+
+        // 如果居住地址已填写，更新就业地址同步状态
+        if (isAddressValid('residence')) {
+          updateSyncedAddress(document.getElementById('workAddressInput'), document.getElementById('residenceProvince'));
+        }
+      } else if (addressType === 'work') {
+        // 如果就业地址已填写，无需操作
+        // 就业地址同步状态由居住地址变化触发
+      }
+    }
+
+    /**
+     * 地址变更时更新同步地址
+     * @param {string} addressType 地址类型(household/residence/work)
+     */
+    function updateAddressSync(addressType) {
+      if (addressType === 'household') {
+        // 户籍地址变更时，更新居住地址同步状态
+        const sameAsHousehold = document.getElementById('sameAsHousehold');
+        if (sameAsHousehold.checked) {
+          updateSyncedAddress(document.getElementById('residenceAddressInput'), document.getElementById('householdCounty'));
+        }
+        updateAddressSyncState('household');
+      } else if (addressType === 'residence') {
+        // 居住地址变更时，更新就业地址同步状态
+        const sameAsResidence = document.getElementById('sameAsResidence');
+        if (sameAsResidence.checked) {
+          updateSyncedAddress(document.getElementById('workAddressInput'), document.getElementById('residenceProvince'));
+        }
+        updateAddressSyncState('residence');
+      }
+    }
+
+    // ---------------------
+    // 页面初始化
+    // ---------------------
+    document.addEventListener('DOMContentLoaded', function() {
+      // 初始化户籍地址选择器
+      initThreeLevelAddressSelector(
+        'householdCounty', 'householdTown', 'householdVillage',
+        householdAddressData
+      );
+
+      // 初始化居住地址选择器
+      initCityAddressSelector(
+        'residenceProvince', 'residenceCity', 'residenceDistrict',
+        cityAddressData, 'sameAsHousehold', 'residenceAddressText', 'residenceAddressFields', 'residenceAddressInput',
+        'householdCounty'
+      );
+
+      // 初始化就业地址选择器
+      initCityAddressSelector(
+        'workProvince', 'workCity', 'workDistrict',
+        cityAddressData, 'sameAsResidence', 'workAddressText', 'workAddressFields', 'workAddressInput',
+        'residenceProvince'
+      );
+
+      // 初始检查地址同步状态
+      updateAddressSyncState('household');
+      updateAddressSyncState('residence');
+
+      // 模拟加载完成，显示内容
+      setTimeout(() => {
+        document.getElementById('loader').classList.add('opacity-0');
+        setTimeout(() => {
+          document.getElementById('loader').style.display = 'none';
+          document.getElementById('content').classList.remove('opacity-0');
+        }, 500);
+      }, 1000);
+    });
 
 
   </script>
